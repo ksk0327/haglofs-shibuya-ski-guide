@@ -1,0 +1,461 @@
+# -*- coding: utf-8 -*-
+"""Generates the 5 Haglöfs ski-series product pages from structured data."""
+import os
+
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "products")
+
+PLACEHOLDER_ICON = '''<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 20V9l8-5 8 5v11M4 20h16M9 20v-6h6v6"/></svg>'''
+
+def gallery_html(labels):
+    slides = []
+    for label in labels:
+        slides.append(f'''      <div class="slide"><div class="slide-inner">{PLACEHOLDER_ICON}<div class="ph-label">Photo placeholder<br>{label}</div></div></div>''')
+    return '\n'.join(slides)
+
+def kf_html(items):
+    out = []
+    for label, value in items:
+        out.append(f'''      <div class="kf"><div class="kf-label">{label}</div><div class="kf-value">{value}</div></div>''')
+    return '\n'.join(out)
+
+def feature_list_html(items):
+    return '\n'.join(f'      <li>{i}</li>' for i in items)
+
+def specs_table_html(rows):
+    out = []
+    for label, value in rows:
+        out.append(f'      <tr><th>{label}</th><td>{value}</td></tr>')
+    return '\n'.join(out)
+
+def size_table_html(headers, rows):
+    head = ''.join(f'<th>{h}</th>' for h in headers)
+    body = []
+    for row in rows:
+        cells = ''.join(f'<td>{c}</td>' for c in row)
+        body.append(f'          <tr>{cells}</tr>')
+    return head, '\n'.join(body)
+
+def chips_html(items):
+    return '\n'.join(f'      <span class="chip">{i}</span>' for i in items)
+
+def related_html(items, current_slug):
+    out = []
+    for slug, name, spec in items:
+        if slug == current_slug:
+            continue
+        out.append(f'''    <a href="{slug}.html"><span class="rel-name">{name}</span><span class="rel-spec">{spec}</span></a>''')
+    return '\n'.join(out)
+
+ALL_PRODUCTS = [
+    ("vassi-gtx-pro-ii", "Vassi GTX Pro II Jacket", "28,000mm WP / 665g"),
+    ("vassi-gtx-ii", "Vassi GTX II Jacket", "28,000mm WP / 720g"),
+    ("alper-proof", "Alper Proof Jacket", "20,000mm WP / 670g"),
+    ("latnja-gtx-insulated", "Latnja GTX Insulated Jacket", "Insulated / see staff"),
+    ("nallo-touring-gtx", "Nallo Touring GTX Jacket", "28,000mm WP / 407g — lightest"),
+]
+
+TEMPLATE = '''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{name_en} — Haglöfs Shibuya</title>
+<meta name="description" content="{meta_desc}">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Haglöfs Shibuya<small>Ski Series Guide</small></a>
+    <nav><a href="../index.html">All items</a></nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <a class="back-link" href="../index.html">&larr; All ski jackets</a>
+
+  <div class="gallery">
+{gallery}
+  </div>
+
+  <div class="product-head">
+    <div class="model-tag">Haglöfs · Style {model_number}</div>
+    <h1>{name_en}</h1>
+    <p class="jp-name">{name_jp}</p>
+    <p class="price">{price}<small>{price_note}</small></p>
+  </div>
+
+  <div class="key-features">
+{key_features}
+  </div>
+
+  <section class="section-block">
+    <h2>About this jacket</h2>
+    <p>{about}</p>
+  </section>
+
+  <section class="section-block">
+    <h2>Key features</h2>
+    <ul class="feature-list">
+{features}
+    </ul>
+  </section>
+
+  <section class="section-block">
+    <h2>Materials &amp; specs</h2>
+    <table class="specs">
+{specs}
+    </table>
+  </section>
+
+  <section class="section-block">
+{size_section}
+  </section>
+
+  <section class="section-block">
+    <h2>Colors &amp; sizes in this style</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 6px;">Colors</p>
+    <div class="avail-grid">
+{colors}
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin:14px 0 6px;">Sizes</p>
+    <div class="avail-grid">
+{sizes}
+    </div>
+  </section>
+
+  <section class="section-block">
+    <h2>Compare with other Ski Series jackets</h2>
+    <div class="related-grid">
+{related}
+    </div>
+  </section>
+
+  <div class="staff-note">
+    Not sure which one fits your trip? Show this page to any Haglöfs Shibuya staff member — we're happy to help in English.
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Haglöfs Shibuya · RCT Japan</span>
+    <span>Ask any staff member if you'd like help in English.</span>
+  </div>
+</footer>
+
+</body>
+</html>
+'''
+
+def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
+          gallery_labels, kf_items, about, features, specs_rows,
+          size_headers, size_rows, size_note, colors, sizes):
+    gallery = gallery_html(gallery_labels)
+    key_features = kf_html(kf_items)
+    feat_list = feature_list_html(features)
+    specs = specs_table_html(specs_rows)
+
+    if size_headers:
+        head, body = size_table_html(size_headers, size_rows)
+        size_section = f'''    <h2>Size chart (cm)</h2>
+    <div class="size-table-wrap">
+      <table class="size">
+        <thead><tr>{head}</tr></thead>
+        <tbody>
+{body}
+        </tbody>
+      </table>
+    </div>
+    <p class="size-note">{size_note}</p>'''
+    else:
+        size_section = f'''    <h2>Size chart</h2>
+    <p>{size_note}</p>'''
+
+    colors_html = chips_html(colors)
+    sizes_html = chips_html(sizes)
+    related = related_html(ALL_PRODUCTS, slug)
+
+    html = TEMPLATE.format(
+        name_en=name_en, name_jp=name_jp, model_number=model_number,
+        price=price, price_note=price_note, meta_desc=meta_desc,
+        gallery=gallery, key_features=key_features, about=about,
+        features=feat_list, specs=specs, size_section=size_section,
+        colors=colors_html, sizes=sizes_html, related=related,
+    )
+    out_path = os.path.join(OUT_DIR, f"{slug}.html")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print("wrote", out_path)
+
+
+# ---------------------------------------------------------------
+# 1) Vassi GTX Pro II Jacket Men
+# ---------------------------------------------------------------
+build(
+    slug="vassi-gtx-pro-ii",
+    name_en="Vassi GTX Pro II Jacket Men",
+    name_jp="ヴァッシ ゴアテックス プロ II ジャケット〔メンズ〕",
+    model_number="608577",
+    price="¥126,500",
+    price_note=" reference price — please confirm in store",
+    meta_desc="Haglöfs Vassi GTX Pro II freeride ski jacket — specs, features and size chart for international customers.",
+    gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
+    kf_items=[
+        ("Waterproof", "28,000mm"),
+        ("Breathability", "RET 13.5"),
+        ("Weight (L)", "665g"),
+        ("Hood", "Helmet-compatible"),
+    ],
+    about=("The top-of-line jacket in Haglöfs' Vassi freeride series, built for skiers who split their time between "
+           "resort laps and backcountry lines. A 3-layer GORE-TEX Pro shell — Haglöfs' most protective, most "
+           "breathable waterproof fabric — handles deep snow, high wind and long days without overheating."),
+    features=[
+        "Helmet-compatible hood, adjustable from two points",
+        "Chin guard with laser-cut ventilation flap and soft fleece lining",
+        "Angled 2-way pit-zip ventilation that stays clear of a backpack's hip belt",
+        "2 hand pockets with gusseted zips, large enough for gloved hands",
+        "2 zippered chest pockets",
+        "Goggle wipe built into a chest pocket",
+        "Ski-pass pocket on the left sleeve",
+        "Open mesh inner pocket for small items",
+        "Stretch snow skirt with rubber grip, keeps powder out",
+        "Articulated elbows for a freer range of motion",
+        "Wide velcro cuff adjusters",
+        "Drawcord hem",
+        "RECCO® reflector for avalanche rescue search",
+        "PFAS-free water-repellent (DWR) finish",
+        "bluesign® approved fabric",
+    ],
+    specs_rows=[
+        ("Shell fabric", "3-layer GORE-TEX Pro, 100% recycled polyamide, 70 denier"),
+        ("Waterproofness", "28,000mm"),
+        ("Breathability (RET)", "13.5 — lower RET = more breathable"),
+        ("Weight", "665g (men's size L)"),
+        ("Water repellent finish", "PFAS-free DWR"),
+        ("Certification", "bluesign® approved"),
+    ],
+    size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
+    size_rows=[
+        ["S", "121.5", "110.0", "112.0", "83.0", "84.0"],
+        ["M", "127.5", "116.0", "118.0", "84.0", "85.5"],
+        ["L", "133.5", "122.0", "124.0", "85.0", "87.5"],
+        ["XL", "139.5", "128.0", "130.0", "86.0", "89.0"],
+        ["XXL", "145.5", "134.0", "136.0", "87.0", "90.5"],
+    ],
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. Reference model is 166cm tall, shown in size M.",
+    colors=["Purple Night / Evening", "True Black / Chlorophy"],
+    sizes=["S", "M", "L", "XL", "XXL"],
+)
+
+# ---------------------------------------------------------------
+# 2) Vassi GTX II Jacket Men
+# ---------------------------------------------------------------
+build(
+    slug="vassi-gtx-ii",
+    name_en="Vassi GTX II Jacket Men",
+    name_jp="ヴァッシ ゴアテックス II ジャケット〔メンズ〕",
+    model_number="608574",
+    price="¥93,500",
+    price_note=" reference price — please confirm in store",
+    meta_desc="Haglöfs Vassi GTX II freeride ski jacket — specs, features and size chart for international customers.",
+    gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
+    kf_items=[
+        ("Waterproof", "28,000mm"),
+        ("Breathability", "RET 20"),
+        ("Weight (L)", "720g"),
+        ("Hood", "Helmet-compatible"),
+    ],
+    about=("The everyday version of Haglöfs' Vassi freeride series. A 3-layer GORE-TEX shell gives the same "
+           "waterproof, windproof protection as the Pro II at a more accessible price, in a slightly heavier, "
+           "more durable 75-denier fabric — a strong all-round choice for resort and backcountry skiing alike."),
+    features=[
+        "Large helmet-compatible hood, adjustable from two points",
+        "Chin guard with laser-cut ventilation flap and soft fleece lining",
+        "Angled 2-way pit-zip ventilation that stays clear of a backpack",
+        "2 hand pockets with gusseted zips",
+        "1 zippered chest pocket",
+        "Goggle wipe",
+        "Ski-pass pocket on the left upper sleeve",
+        "Open mesh inner pocket",
+        "Stretch powder skirt with rubber grip",
+        "Articulated elbows",
+        "Wide velcro cuff adjusters",
+        "Drawcord hem",
+        "RECCO® reflector",
+        "PFAS-free water-repellent (DWR) finish",
+        "bluesign® approved fabric",
+    ],
+    specs_rows=[
+        ("Shell fabric", "3-layer GORE-TEX, 100% recycled polyester, 75 denier"),
+        ("Membrane", "PFAS-free GORE-TEX ePE laminate"),
+        ("Waterproofness", "28,000mm"),
+        ("Breathability (RET)", "20"),
+        ("Weight", "720g (men's size L)"),
+        ("Water repellent finish", "PFAS-free DWR"),
+        ("Certification", "bluesign® approved"),
+    ],
+    size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
+    size_rows=[
+        ["S", "118.0", "109.5", "111.5", "80.5", "83.5"],
+        ["M", "124.0", "115.5", "117.5", "81.5", "85.0"],
+        ["L", "130.0", "121.5", "123.5", "82.5", "87.0"],
+        ["XL", "136.0", "127.5", "129.5", "83.5", "88.5"],
+        ["XXL", "142.0", "133.5", "135.5", "84.5", "90.0"],
+    ],
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
+    colors=["Purple Night", "Teak Brown / Woodland", "Dew Green", "Tarn Blue"],
+    sizes=["S", "M", "L", "XL", "XXL"],
+)
+
+# ---------------------------------------------------------------
+# 3) Alper Proof Jacket Men
+# ---------------------------------------------------------------
+build(
+    slug="alper-proof",
+    name_en="Alper Proof Jacket Men",
+    name_jp="アルパー プルーフ ジャケット〔メンズ〕",
+    model_number="607936",
+    price="¥59,400",
+    price_note=" reference price — please confirm in store",
+    meta_desc="Haglöfs Alper Proof all-mountain ski jacket — specs, features and size chart for international customers.",
+    gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
+    kf_items=[
+        ("Waterproof", "20,000mm"),
+        ("Breathability", "20,000 g/m²/24h"),
+        ("Weight (L)", "670g"),
+        ("Hood", "Helmet-compatible"),
+    ],
+    about=("New for Autumn/Winter, the Alper Proof is Haglöfs' value-focused all-mountain jacket — built with the "
+           "brand's in-house PROOF™ Pro waterproof fabric so it covers the everyday ski-resort essentials "
+           "(helmet-compatible hood, ventilation, powder skirt) without the price tag of a GORE-TEX shell."),
+    features=[
+        "Adjustable, helmet-compatible hood",
+        "Zippered pit-zip ventilation",
+        "2 zippered hand pockets, plus one large chest pocket",
+        "Ski-pass pocket on the left upper sleeve",
+        "Stretch snow skirt with rubber grip",
+        "Adjustable drawcord hem",
+        "2-way center-front Aquaguard® zip",
+        "Wide velcro cuff adjusters",
+    ],
+    specs_rows=[
+        ("Shell fabric", "3-layer PROOF™ Pro, 100% recycled polyester, 75 denier"),
+        ("Waterproofness", "20,000mm"),
+        ("Breathability", "20,000 g/m²/24h"),
+        ("Weight", "670g (men's size L)"),
+    ],
+    size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
+    size_rows=[
+        ["S", "118.0", "109.0", "111.0", "80.5", "84.5"],
+        ["M", "124.0", "115.0", "117.0", "81.5", "86.0"],
+        ["L", "130.0", "121.0", "123.0", "82.5", "88.0"],
+        ["XL", "136.0", "127.0", "129.0", "83.5", "89.5"],
+    ],
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. No XXL in this style.",
+    colors=["Please check in-store tag — colorway not listed on reference source"],
+    sizes=["S", "M", "L", "XL"],
+)
+
+# ---------------------------------------------------------------
+# 4) Latnja GTX Insulated Jacket Men
+# ---------------------------------------------------------------
+build(
+    slug="latnja-gtx-insulated",
+    name_en="Latnja GTX Insulated Jacket Men",
+    name_jp="ラティニャ ゴアテックス インシュレイテッド ジャケット〔メンズ〕",
+    model_number="607469",
+    price="¥69,300",
+    price_note=" reference price — please confirm in store",
+    meta_desc="Haglöfs Latnja GTX Insulated ski jacket — specs, features and size chart for international customers.",
+    gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
+    kf_items=[
+        ("Shell", "GORE-TEX 2L"),
+        ("Insulation", "Mapped synthetic fill"),
+        ("Best for", "Cold-weather resort days"),
+        ("Hood", "See staff for fit"),
+    ],
+    about=("Inspired by the Vassi freeride series, the Latnja adds built-in insulation for genuinely cold days — "
+           "resort skiing, lift-served touring, or anywhere you'd rather not layer a separate midlayer underneath. "
+           "A waterproof GORE-TEX 2L shell is paired with a lightweight synthetic fill, mapped so warmth is added "
+           "where you need it most without overheating on the move."),
+    features=[
+        "Insulated construction (mapped fill — more warmth in core areas, less where you move the most)",
+        "Body-mapped insulation placement to reduce overheating during activity",
+        "Waterproof, breathable GORE-TEX construction",
+        "Suited to freeride performance as well as everyday resort and all-mountain skiing",
+    ],
+    specs_rows=[
+        ("Face fabric", "75 denier, high-tenacity"),
+        ("Waterproof membrane", "GORE-TEX® 2L ePE"),
+        ("Insulation", "Lightweight Mimic SILVER fill, body-mapped in 3 fill levels"),
+        ("Waterproofness / RET / weight", "Not listed on reference source — please confirm with staff or product tag"),
+    ],
+    size_headers=None,
+    size_rows=None,
+    size_note="A detailed size chart was not available on the reference source for this style. Please check the in-store size tag or ask a staff member — we'll gladly help you find the right fit.",
+    colors=["Chlorophyll Green", "Chalk Beige", "True Black", "Tarn Blue", "Tech Red", "Woodland Brown", "Seaweed Green", "Habanero"],
+    sizes=["S", "M", "L", "XL", "XXL"],
+)
+
+# ---------------------------------------------------------------
+# 5) Nallo Touring GTX Jacket Men
+# ---------------------------------------------------------------
+build(
+    slug="nallo-touring-gtx",
+    name_en="Nallo Touring GTX Jacket Men",
+    name_jp="ナロ ツーリング ゴアテックス ジャケット〔メンズ〕",
+    model_number="608333",
+    price="¥97,900",
+    price_note=" reference price — please confirm in store",
+    meta_desc="Haglöfs Nallo Touring GTX ski touring jacket — specs, features and size chart for international customers.",
+    gallery_labels=["Front", "Back / hood detail", "Worn, touring"],
+    kf_items=[
+        ("Waterproof", "28,000mm"),
+        ("Breathability", "RET 13"),
+        ("Weight (L)", "407g — lightest in series"),
+        ("Hood", "Helmet-compatible"),
+    ],
+    about=("Built for ski touring rather than the lift line, the Nallo Touring GTX is the lightest jacket in this "
+           "lineup at just 407g. An angled front zip keeps a midlayer pocket reachable even with a pack on, and it's "
+           "the first snow jacket from Haglöfs to include Twiceme® safety technology, which shares medical and "
+           "location information in an emergency via NFC."),
+    features=[
+        "Reflective brand logo for visibility",
+        "Adjustable, helmet-compatible hood with laminated brim",
+        "Angled front ventilation",
+        "Large zippered chest pocket with an internal mesh pocket for a ski pass",
+        "2-way center-front zip",
+        "Internal pocket sized for climbing skins",
+        "Articulated sleeves for freedom of movement",
+        "Adjustable cuffs and hem",
+        "Twiceme® technology — NFC tag shares medical/location info with first responders",
+        "PFAS-free DWR finish",
+        "bluesign® approved fabric",
+    ],
+    specs_rows=[
+        ("Face fabric", "100% recycled polyamide, 30 denier, 3-layer GORE-TEX ripstop"),
+        ("Lining", "100% polyamide"),
+        ("Pocket mesh", "95% polyamide, 5% polyurethane"),
+        ("Waterproofness", "28,000mm"),
+        ("Breathability (RET)", "13"),
+        ("Weight", "407g (men's size L)"),
+        ("Water repellent finish", "PFAS-free DWR"),
+        ("Certification", "bluesign® approved"),
+    ],
+    size_headers=["Size", "Chest", "Hem width", "Waist", "Body length", "Sleeve length"],
+    size_rows=[
+        ["S", "118.0", "112.0", "112.0", "77.5", "83.5"],
+        ["M", "124.0", "118.0", "118.0", "78.5", "85.0"],
+        ["L", "130.0", "124.0", "124.0", "79.5", "86.5"],
+        ["XL", "136.0", "130.0", "130.0", "80.5", "88.5"],
+        ["XXL", "142.0", "136.0", "136.0", "81.5", "90.0"],
+    ],
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
+    colors=["Chlorophyll Green", "Chalk Beige"],
+    sizes=["S", "M", "L", "XL", "XXL"],
+)
+
+print("done")

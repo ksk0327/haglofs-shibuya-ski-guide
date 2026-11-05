@@ -1,0 +1,394 @@
+/* ============================================================
+   Haglöfs Shibuya — Ski Series Product Guide
+   Shared stylesheet
+   ============================================================ */
+
+:root {
+  --ink: #1a1a1a;
+  --muted: #6b6b6b;
+  --line: #e4e1dc;
+  --paper: #ffffff;
+  --sand: #f6f4f0;
+  --accent: #b0251f;
+  --accent-soft: #fbeceb;
+  --radius: 10px;
+  --maxw: 760px;
+  font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+}
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.brand small {
+  display: block;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-transform: none;
+  margin-top: 2px;
+}
+.site-header nav a {
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+
+/* ---------- Breadcrumb / back link ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  margin: 18px 0 0;
+}
+.back-link:hover { color: var(--ink); }
+
+/* ---------- Hero / intro ---------- */
+.intro {
+  padding: 28px 0 8px;
+}
+.eyebrow {
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+.intro h1 {
+  font-size: clamp(24px, 6vw, 32px);
+  margin: 8px 0 6px;
+  line-height: 1.25;
+}
+.intro p {
+  color: var(--muted);
+  font-size: 14.5px;
+  max-width: 60ch;
+}
+
+/* ---------- Product grid (index page) ---------- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin: 24px 0 40px;
+}
+.product-card {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  transition: box-shadow .2s, transform .2s;
+}
+.product-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.product-card .thumb {
+  aspect-ratio: 4/5;
+  background: var(--sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-card .thumb svg { width: 34%; opacity: 0.3; }
+.product-card .card-body { padding: 14px 16px 18px; }
+.product-card .card-tag {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+.product-card h3 {
+  font-size: 16px;
+  margin: 6px 0 4px;
+}
+.product-card .jp-name {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.product-card .mini-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.product-card .mini-specs span {
+  font-size: 10.5px;
+  background: var(--sand);
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+/* ---------- Quick compare table (index page) ---------- */
+.compare-wrap { overflow-x: auto; margin: 10px 0 44px; }
+table.compare {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+  font-size: 13px;
+}
+table.compare caption {
+  text-align: left;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+table.compare thead th {
+  background: var(--sand);
+  font-weight: 700;
+}
+table.compare th.row-label { background: var(--sand); font-weight: 600; white-space: nowrap; }
+table.compare td a { color: var(--accent); text-decoration: none; font-weight: 700; }
+
+/* ---------- Gallery (product page) ---------- */
+.gallery {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 18px 0;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.gallery .slide {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+  aspect-ratio: 4/5;
+  border-radius: var(--radius);
+  background: var(--sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--line);
+}
+.gallery .slide svg { width: 28%; opacity: 0.28; }
+.gallery .slide span {
+  position: absolute;
+  margin-top: 70px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.gallery .slide .ph-label {
+  margin-top: 90px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 0 16px;
+}
+.gallery .slide-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Product title block ---------- */
+.product-head { padding: 6px 0 10px; }
+.product-head .model-tag {
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+.product-head h1 {
+  font-size: clamp(22px, 6vw, 28px);
+  margin: 6px 0 4px;
+  line-height: 1.3;
+}
+.product-head .jp-name { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+.product-head .price { font-size: 15px; font-weight: 700; margin: 6px 0 0; }
+.product-head .price small { font-weight: 400; color: var(--muted); font-size: 11.5px; }
+
+/* ---------- Key features strip ---------- */
+.key-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 18px 0 8px;
+}
+.key-features .kf {
+  background: var(--sand);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.key-features .kf .kf-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.key-features .kf .kf-value {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 3px;
+}
+
+/* ---------- Section blocks ---------- */
+.section-block { padding: 28px 0; border-top: 1px solid var(--line); }
+.section-block h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+.section-block p { font-size: 14.5px; }
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 9px;
+}
+.feature-list li {
+  font-size: 14px;
+  padding-left: 18px;
+  position: relative;
+}
+.feature-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* ---------- Specs & size tables ---------- */
+table.specs, table.size {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13.5px;
+}
+table.specs td, table.specs th,
+table.size td, table.size th {
+  border: 1px solid var(--line);
+  padding: 9px 10px;
+  text-align: left;
+}
+table.specs th { width: 40%; background: var(--sand); font-weight: 600; }
+table.size { min-width: 520px; }
+table.size thead th { background: var(--sand); }
+.size-table-wrap { overflow-x: auto; }
+.size-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+/* ---------- Colors / sizes available ---------- */
+.avail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.avail-grid .chip {
+  font-size: 12.5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  color: var(--ink);
+}
+
+/* ---------- Related / compare products ---------- */
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.related-grid a {
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 13px;
+  display: block;
+}
+.related-grid a:hover { border-color: var(--accent); }
+.related-grid a .rel-name { font-weight: 700; display: block; margin-bottom: 3px; }
+.related-grid a .rel-spec { color: var(--muted); font-size: 11.5px; }
+
+/* ---------- Staff note ---------- */
+.staff-note {
+  background: var(--accent-soft);
+  border: 1px solid #f2d3d1;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 13.5px;
+  margin-top: 10px;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0 40px;
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.site-footer .wrap { display: flex; flex-direction: column; gap: 4px; }
+
+@media (min-width: 600px) {
+  .site-footer .wrap { flex-direction: row; justify-content: space-between; }
+}
