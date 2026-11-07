@@ -34,17 +34,21 @@ HTML files that can be opened directly in a browser or served by any static host
 
 The product copy, specs, and prices were sourced from the UPLND online store
 (https://uplnd.com) product pages, since that was the reference the content owner (建部さん)
-provided. Before printing QR codes and putting these live in the store, please confirm:
+provided. Status as of the latest update:
 
-1. **Prices** shown are current and match the in-store tag.
-2. **Specs** — a few fields could not be found on the source page and are marked
-   "— (see staff)" or "please confirm with staff":
-   - Alper Proof: colorway names were not listed.
-   - Latnja GTX Insulated: waterproof rating, RET, weight, and the full size chart
-     were not listed on the source page.
-3. All text was rewritten in the Agent's own words from the factual specs (not copied
-   verbatim from UPLND's marketing copy), to avoid any copyright concerns. Feel free to
-   adjust tone/wording further.
+1. **Prices** — confirmed correct against the in-store tags (建部さん, 2026-11). ✅
+2. **Alper Proof colorways** — confirmed: Northern Blue / Tarn Blue, Seaweed Green /
+   Chlorophyll Green, Teak Brown, True Black. ✅
+3. **Latnja GTX Insulated specs** — waterproofness (28,000mm), membrane (GORE-TEX® ePE
+   2-layer), insulation (Mimic SILVER, 3-zone mapped), and weight (850g, men's L)
+   confirmed and added. Still outstanding:
+   - Breathability (RET) value — not yet provided, page still reads "please confirm
+     with staff."
+   - Full size chart (S–XXL, cm) — not yet provided, page still reads "please check
+     the in-store size tag."
+4. All text was rewritten in the Agent's own words from the factual specs (not copied
+   verbatim from UPLND's marketing copy, nor from any other source material provided),
+   to avoid any copyright concerns. Feel free to adjust tone/wording further.
 
 ## Adding real product photos
 

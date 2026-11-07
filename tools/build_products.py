@@ -355,7 +355,7 @@ build(
         ["XL", "136.0", "127.0", "129.0", "83.5", "89.5"],
     ],
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. No XXL in this style.",
-    colors=["Please check in-store tag — colorway not listed on reference source"],
+    colors=["Northern Blue / Tarn Blue", "Seaweed Green / Chlorophyll Green", "Teak Brown", "True Black"],
     sizes=["S", "M", "L", "XL"],
 )
 
@@ -372,30 +372,42 @@ build(
     meta_desc="Haglöfs Latnja GTX Insulated ski jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
-        ("Shell", "GORE-TEX 2L"),
-        ("Insulation", "Mapped synthetic fill"),
-        ("Best for", "Cold-weather resort days"),
-        ("Hood", "See staff for fit"),
+        ("Waterproof", "28,000mm"),
+        ("Insulation", "3-level mapped fill"),
+        ("Weight (L)", "850g"),
+        ("Hood", "Helmet-compatible, 2-way adjustable"),
     ],
     about=("Inspired by the Vassi freeride series, the Latnja adds built-in insulation for genuinely cold days — "
            "resort skiing, lift-served touring, or anywhere you'd rather not layer a separate midlayer underneath. "
-           "A waterproof GORE-TEX 2L shell is paired with a lightweight synthetic fill, mapped so warmth is added "
-           "where you need it most without overheating on the move."),
+           "A waterproof GORE-TEX ePE 2-layer shell is paired with a lightweight Mimic SILVER fill, mapped across "
+           "three zones so warmth is added where you need it most without overheating on the move."),
     features=[
-        "Insulated construction (mapped fill — more warmth in core areas, less where you move the most)",
-        "Body-mapped insulation placement to reduce overheating during activity",
-        "Waterproof, breathable GORE-TEX construction",
-        "Suited to freeride performance as well as everyday resort and all-mountain skiing",
+        "2-way adjustable, helmet-compatible hood",
+        "Snow skirt with rubber grip to seal out powder",
+        "Stand collar with a removable brushed chin guard, plus zippered ventilation",
+        "Diagonally placed 2-way zip ventilation",
+        "2 zippered hand pockets, 1 large chest pocket, 1 ski-pass sleeve pocket",
+        "Stretch wrist gaiters under adjustable velcro cuffs",
+        "Adjustable drawcord hem",
+        "PFC-free DWR finish",
     ],
     specs_rows=[
-        ("Face fabric", "75 denier, high-tenacity"),
-        ("Waterproof membrane", "GORE-TEX® 2L ePE"),
-        ("Insulation", "Lightweight Mimic SILVER fill, body-mapped in 3 fill levels"),
-        ("Waterproofness / RET / weight", "Not listed on reference source — please confirm with staff or product tag"),
+        ("Shell fabric", "75 denier, 100% recycled polyester / GORE-TEX® 2L ePE"),
+        ("Lining", "100% recycled polyester"),
+        ("Insulation", "100% recycled polyester / Mimic SILVER, body-mapped across 3 zones"),
+        ("Waterproofness", "28,000mm"),
+        ("Weight", "850g (men's size L)"),
+        ("Breathability (RET)", "To be confirmed — check with staff"),
     ],
-    size_headers=None,
-    size_rows=None,
-    size_note="A detailed size chart was not available on the reference source for this style. Please check the in-store size tag or ask a staff member — we'll gladly help you find the right fit.",
+    size_headers=["Size", "Chest", "Waist width", "Shoulder width", "Body length", "Sleeve length"],
+    size_rows=[
+        ["S", "118.0", "109.0", "48.5", "81.0", "84.0"],
+        ["M", "124.0", "115.0", "50.5", "82.0", "85.5"],
+        ["L", "130.0", "121.0", "52.5", "83.0", "87.5"],
+        ["XL", "136.0", "127.0", "54.5", "84.0", "89.0"],
+        ["XXL", "142.0", "133.0", "56.5", "85.0", "90.5"],
+    ],
+    size_note="All measurements in cm, garment laid flat (external measurements). Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige", "True Black", "Tarn Blue", "Tech Red", "Woodland Brown", "Seaweed Green", "Habanero"],
     sizes=["S", "M", "L", "XL", "XXL"],
 )
