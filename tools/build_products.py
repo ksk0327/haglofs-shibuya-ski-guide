@@ -12,6 +12,18 @@ def gallery_html(labels):
         slides.append(f'''      <div class="slide"><div class="slide-inner">{PLACEHOLDER_ICON}<div class="ph-label">Photo placeholder<br>{label}</div></div></div>''')
     return '\n'.join(slides)
 
+def gallery_images_html(images):
+    """images: list of dicts with keys src, alt, caption."""
+    slides = []
+    for img in images:
+        slides.append(
+            '      <div class="slide slide-photo">'
+            f'<img src="{img["src"]}" alt="{img["alt"]}">'
+            f'<div class="slide-caption">{img["caption"]}</div>'
+            '</div>'
+        )
+    return '\n'.join(slides)
+
 def kf_html(items):
     out = []
     for label, value in items:
@@ -152,8 +164,8 @@ TEMPLATE = '''<!doctype html>
 
 def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
           gallery_labels, kf_items, about, features, specs_rows,
-          size_headers, size_rows, size_note, colors, sizes):
-    gallery = gallery_html(gallery_labels)
+          size_headers, size_rows, size_note, colors, sizes, images=None):
+    gallery = gallery_images_html(images) if images else gallery_html(gallery_labels)
     key_features = kf_html(kf_items)
     feat_list = feature_list_html(features)
     specs = specs_table_html(specs_rows)
@@ -246,8 +258,22 @@ build(
         ["XXL", "145.5", "134.0", "136.0", "87.0", "90.5"],
     ],
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. Reference model is 166cm tall, shown in size M.",
-    colors=["Purple Night / Evening", "True Black / Chlorophy"],
+    colors=["Purple Night / Evening", "True Black / Chlorophyll Green"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    images=[
+        {"src": "../assets/img/vassi-gtx-pro-ii-purple-night-evening-front.webp",
+         "alt": "Vassi GTX Pro II Jacket, Purple Night / Evening colorway, front",
+         "caption": "Purple Night / Evening — Front"},
+        {"src": "../assets/img/vassi-gtx-pro-ii-purple-night-evening-back.webp",
+         "alt": "Vassi GTX Pro II Jacket, Purple Night / Evening colorway, back",
+         "caption": "Purple Night / Evening — Back"},
+        {"src": "../assets/img/vassi-gtx-pro-ii-true-black-chlorophyll-green-front.webp",
+         "alt": "Vassi GTX Pro II Jacket, True Black / Chlorophyll Green colorway, front",
+         "caption": "True Black / Chlorophyll Green — Front"},
+        {"src": "../assets/img/vassi-gtx-pro-ii-true-black-chlorophyll-green-back.webp",
+         "alt": "Vassi GTX Pro II Jacket, True Black / Chlorophyll Green colorway, back",
+         "caption": "True Black / Chlorophyll Green — Back"},
+    ],
 )
 
 # ---------------------------------------------------------------
@@ -308,6 +334,32 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Purple Night", "Teak Brown / Woodland", "Dew Green", "Tarn Blue"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    images=[
+        {"src": "../assets/img/vassi-gtx-ii-dew-green-front.webp",
+         "alt": "Vassi GTX II Jacket, Dew Green colorway, front",
+         "caption": "Dew Green — Front"},
+        {"src": "../assets/img/vassi-gtx-ii-dew-green-back.webp",
+         "alt": "Vassi GTX II Jacket, Dew Green colorway, back",
+         "caption": "Dew Green — Back"},
+        {"src": "../assets/img/vassi-gtx-ii-purple-night-front.webp",
+         "alt": "Vassi GTX II Jacket, Purple Night colorway, front",
+         "caption": "Purple Night — Front"},
+        {"src": "../assets/img/vassi-gtx-ii-purple-night-back.webp",
+         "alt": "Vassi GTX II Jacket, Purple Night colorway, back",
+         "caption": "Purple Night — Back"},
+        {"src": "../assets/img/vassi-gtx-ii-tarn-blue-front.webp",
+         "alt": "Vassi GTX II Jacket, Tarn Blue colorway, front",
+         "caption": "Tarn Blue — Front"},
+        {"src": "../assets/img/vassi-gtx-ii-tarn-blue-back.webp",
+         "alt": "Vassi GTX II Jacket, Tarn Blue colorway, back",
+         "caption": "Tarn Blue — Back"},
+        {"src": "../assets/img/vassi-gtx-ii-teak-brown-woodland-front.webp",
+         "alt": "Vassi GTX II Jacket, Teak Brown / Woodland colorway, front",
+         "caption": "Teak Brown / Woodland — Front"},
+        {"src": "../assets/img/vassi-gtx-ii-teak-brown-woodland-back.webp",
+         "alt": "Vassi GTX II Jacket, Teak Brown / Woodland colorway, back",
+         "caption": "Teak Brown / Woodland — Back"},
+    ],
 )
 
 # ---------------------------------------------------------------
@@ -357,6 +409,32 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. No XXL in this style.",
     colors=["Northern Blue / Tarn Blue", "Seaweed Green / Chlorophyll Green", "Teak Brown", "True Black"],
     sizes=["S", "M", "L", "XL"],
+    images=[
+        {"src": "../assets/img/alper-proof-northern-blue-tarn-blue-front.webp",
+         "alt": "Alper Proof Jacket, Northern Blue / Tarn Blue colorway, front",
+         "caption": "Northern Blue / Tarn Blue — Front"},
+        {"src": "../assets/img/alper-proof-northern-blue-tarn-blue-back.webp",
+         "alt": "Alper Proof Jacket, Northern Blue / Tarn Blue colorway, back",
+         "caption": "Northern Blue / Tarn Blue — Back"},
+        {"src": "../assets/img/alper-proof-seaweed-green-chlorophyll-green-front.webp",
+         "alt": "Alper Proof Jacket, Seaweed Green / Chlorophyll Green colorway, front",
+         "caption": "Seaweed Green / Chlorophyll Green — Front"},
+        {"src": "../assets/img/alper-proof-seaweed-green-chlorophyll-green-back.webp",
+         "alt": "Alper Proof Jacket, Seaweed Green / Chlorophyll Green colorway, back",
+         "caption": "Seaweed Green / Chlorophyll Green — Back"},
+        {"src": "../assets/img/alper-proof-teak-brown-front.webp",
+         "alt": "Alper Proof Jacket, Teak Brown colorway, front",
+         "caption": "Teak Brown — Front"},
+        {"src": "../assets/img/alper-proof-teak-brown-back.webp",
+         "alt": "Alper Proof Jacket, Teak Brown colorway, back",
+         "caption": "Teak Brown — Back"},
+        {"src": "../assets/img/alper-proof-true-black-front.webp",
+         "alt": "Alper Proof Jacket, True Black colorway, front",
+         "caption": "True Black — Front"},
+        {"src": "../assets/img/alper-proof-true-black-back.webp",
+         "alt": "Alper Proof Jacket, True Black colorway, back",
+         "caption": "True Black — Back"},
+    ],
 )
 
 # ---------------------------------------------------------------
@@ -411,6 +489,32 @@ build(
     size_note="All measurements in cm, garment laid flat (external measurements). Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige", "Turn Blue", "True Black"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    images=[
+        {"src": "../assets/img/latnja-gtx-insulated-chalk-beige-front.webp",
+         "alt": "Latnja GTX Insulated Jacket, Chalk Beige colorway, front",
+         "caption": "Chalk Beige — Front"},
+        {"src": "../assets/img/latnja-gtx-insulated-chalk-beige-back.webp",
+         "alt": "Latnja GTX Insulated Jacket, Chalk Beige colorway, back",
+         "caption": "Chalk Beige — Back"},
+        {"src": "../assets/img/latnja-gtx-insulated-chlorophyll-green-front.webp",
+         "alt": "Latnja GTX Insulated Jacket, Chlorophyll Green colorway, front",
+         "caption": "Chlorophyll Green — Front"},
+        {"src": "../assets/img/latnja-gtx-insulated-chlorophyll-green-back.webp",
+         "alt": "Latnja GTX Insulated Jacket, Chlorophyll Green colorway, back",
+         "caption": "Chlorophyll Green — Back"},
+        {"src": "../assets/img/latnja-gtx-insulated-true-black-front.webp",
+         "alt": "Latnja GTX Insulated Jacket, True Black colorway, front",
+         "caption": "True Black — Front"},
+        {"src": "../assets/img/latnja-gtx-insulated-true-black-back.webp",
+         "alt": "Latnja GTX Insulated Jacket, True Black colorway, back",
+         "caption": "True Black — Back"},
+        {"src": "../assets/img/latnja-gtx-insulated-turn-blue-front.webp",
+         "alt": "Latnja GTX Insulated Jacket, Turn Blue colorway, front",
+         "caption": "Turn Blue — Front"},
+        {"src": "../assets/img/latnja-gtx-insulated-turn-blue-back.webp",
+         "alt": "Latnja GTX Insulated Jacket, Turn Blue colorway, back",
+         "caption": "Turn Blue — Back"},
+    ],
 )
 
 # ---------------------------------------------------------------
@@ -469,6 +573,20 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    images=[
+        {"src": "../assets/img/nallo-touring-gtx-chalk-beige-front.webp",
+         "alt": "Nallo Touring GTX Jacket, Chalk Beige colorway, front",
+         "caption": "Chalk Beige — Front"},
+        {"src": "../assets/img/nallo-touring-gtx-chalk-beige-back.webp",
+         "alt": "Nallo Touring GTX Jacket, Chalk Beige colorway, back",
+         "caption": "Chalk Beige — Back"},
+        {"src": "../assets/img/nallo-touring-gtx-chlorophyll-green-front.webp",
+         "alt": "Nallo Touring GTX Jacket, Chlorophyll Green colorway, front",
+         "caption": "Chlorophyll Green — Front"},
+        {"src": "../assets/img/nallo-touring-gtx-chlorophyll-green-back.webp",
+         "alt": "Nallo Touring GTX Jacket, Chlorophyll Green colorway, back",
+         "caption": "Chlorophyll Green — Back"},
+    ],
 )
 
 print("done")
