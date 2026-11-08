@@ -39,13 +39,11 @@ provided. Status as of the latest update:
 1. **Prices** — confirmed correct against the in-store tags (建部さん, 2026-11). ✅
 2. **Alper Proof colorways** — confirmed: Northern Blue / Tarn Blue, Seaweed Green /
    Chlorophyll Green, Teak Brown, True Black. ✅
-3. **Latnja GTX Insulated specs** — waterproofness (28,000mm), membrane (GORE-TEX® ePE
-   2-layer), insulation (Mimic SILVER, 3-zone mapped), and weight (850g, men's L)
-   confirmed and added. Still outstanding:
-   - Breathability (RET) value — not yet provided, page still reads "please confirm
-     with staff."
-   - Full size chart (S–XXL, cm) — not yet provided, page still reads "please check
-     the in-store size tag."
+3. **Latnja GTX Insulated specs** — fully confirmed from the in-store product tag:
+   waterproofness (28,000mm), membrane (GORE-TEX® ePE 2-layer), insulation (Mimic
+   SILVER, 3-zone mapped), breathability (RET > 13), weight (860g, men's L), full
+   size chart (S–XXL, cm), and all 4 colorways (Chlorophyll Green, Chalk Beige,
+   Turn Blue, True Black). ✅ All content for this product is now confirmed.
 4. All text was rewritten in the Agent's own words from the factual specs (not copied
    verbatim from UPLND's marketing copy, nor from any other source material provided),
    to avoid any copyright concerns. Feel free to adjust tone/wording further.

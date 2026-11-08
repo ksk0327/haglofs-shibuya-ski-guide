@@ -373,8 +373,8 @@ build(
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
         ("Waterproof", "28,000mm"),
-        ("Insulation", "3-level mapped fill"),
-        ("Weight (L)", "850g"),
+        ("Breathability", "RET > 13"),
+        ("Weight (L)", "860g"),
         ("Hood", "Helmet-compatible, 2-way adjustable"),
     ],
     about=("Inspired by the Vassi freeride series, the Latnja adds built-in insulation for genuinely cold days — "
@@ -389,15 +389,16 @@ build(
         "2 zippered hand pockets, 1 large chest pocket, 1 ski-pass sleeve pocket",
         "Stretch wrist gaiters under adjustable velcro cuffs",
         "Adjustable drawcord hem",
-        "PFC-free DWR finish",
+        "PFAS-free DWR finish",
+        "RECCO® reflector",
     ],
     specs_rows=[
         ("Shell fabric", "75 denier, 100% recycled polyester / GORE-TEX® 2L ePE"),
         ("Lining", "100% recycled polyester"),
         ("Insulation", "100% recycled polyester / Mimic SILVER, body-mapped across 3 zones"),
         ("Waterproofness", "28,000mm"),
-        ("Weight", "850g (men's size L)"),
-        ("Breathability (RET)", "To be confirmed — check with staff"),
+        ("Breathability (RET)", "RET > 13"),
+        ("Weight", "860g (men's size L)"),
     ],
     size_headers=["Size", "Chest", "Waist width", "Shoulder width", "Body length", "Sleeve length"],
     size_rows=[
@@ -408,7 +409,7 @@ build(
         ["XXL", "142.0", "133.0", "56.5", "85.0", "90.5"],
     ],
     size_note="All measurements in cm, garment laid flat (external measurements). Multiply by 0.39 for an approximate inch value.",
-    colors=["Chlorophyll Green", "Chalk Beige", "True Black", "Tarn Blue", "Tech Red", "Woodland Brown", "Seaweed Green", "Habanero"],
+    colors=["Chlorophyll Green", "Chalk Beige", "Turn Blue", "True Black"],
     sizes=["S", "M", "L", "XL", "XXL"],
 )
 
