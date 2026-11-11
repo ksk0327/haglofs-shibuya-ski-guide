@@ -171,6 +171,39 @@ a { color: inherit; }
   color: var(--muted);
 }
 
+/* ---------- Fit-finder radar charts (index page) ---------- */
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px 0;
+  margin: 10px 0 36px;
+}
+.radar-card { text-align: center; }
+.radar-card img { width: 100%; height: auto; aspect-ratio: 1 / 1; display: block; }
+.radar-card .radar-name {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: -6px;
+}
+.radar-note { font-size: 12px; color: var(--muted); margin: -24px 0 0; }
+
+/* ---------- Payment methods (index page) ---------- */
+.payment-grid {
+  display: grid;
+  gap: 14px;
+  margin: 14px 0 0;
+}
+.payment-row { display: flex; gap: 12px; align-items: flex-start; }
+.payment-row svg { width: 26px; height: 26px; flex: 0 0 auto; color: var(--accent); margin-top: 2px; }
+.payment-row .payment-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 3px;
+}
+.payment-row .payment-list { font-size: 13.5px; }
+
 /* ---------- Quick compare table (index page) ---------- */
 .compare-wrap { overflow-x: auto; margin: 10px 0 44px; }
 table.compare {
@@ -282,6 +315,16 @@ table.compare td a { color: var(--accent); text-decoration: none; font-weight: 7
 .product-head .jp-name { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
 .product-head .price { font-size: 15px; font-weight: 700; margin: 6px 0 0; }
 .product-head .price small { font-weight: 400; color: var(--muted); font-size: 11.5px; }
+.best-for {
+  display: inline-block;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin: 12px 0 0;
+}
 
 /* ---------- Key features strip ---------- */
 .key-features {
@@ -358,6 +401,30 @@ table.size { min-width: 520px; }
 table.size thead th { background: var(--sand); }
 .size-table-wrap { overflow-x: auto; }
 .size-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+/* ---------- Scroll hint (tables wider than the screen) ---------- */
+.scroll-hint {
+  display: none;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  margin: -4px 0 8px;
+}
+@media (max-width: 700px) {
+  .scroll-hint { display: block; }
+}
+.compare-wrap, .size-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(to right, var(--paper) 30%, rgba(255, 255, 255, 0)) 0 0,
+    linear-gradient(to left, var(--paper) 30%, rgba(255, 255, 255, 0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0)) 0 0,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0)) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 36px 100%, 36px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
 
 /* ---------- Colors / sizes available ---------- */
 .avail-grid {

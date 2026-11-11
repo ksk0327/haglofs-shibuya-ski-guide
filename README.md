@@ -44,9 +44,44 @@ provided. Status as of the latest update:
    SILVER, 3-zone mapped), breathability (RET > 13), weight (860g, men's L), full
    size chart (S–XXL, cm), and all 4 colorways (Chlorophyll Green, Chalk Beige,
    Turn Blue, True Black). ✅ All content for this product is now confirmed.
-4. All text was rewritten in the Agent's own words from the factual specs (not copied
-   verbatim from UPLND's marketing copy, nor from any other source material provided),
-   to avoid any copyright concerns. Feel free to adjust tone/wording further.
+4. **Vassi GTX Pro II colorway** — ✅ confirmed (2026-11-09) by 建部さん against the
+   in-store tag: "True Black / Chlorophyll Green" is correct.
+5. **bluesign® / PFAS-free DWR claims** — ✅ resolved (2026-11-08): 建部さん decided to
+   drop these claims from all 5 pages rather than add them to Alper Proof, since this
+   information is already on each product's physical in-store tag and doesn't need to
+   be duplicated on the online guide. All "Certification" / "Water repellent finish"
+   rows and related bullet points were removed across every product for consistency.
+6. **Currency conversion** — intentionally not added. 建部さん chose payment methods
+   only, no currency conversion (exchange rates would need ongoing upkeep).
+7. **Accepted payment methods** — ✅ added (2026-11-08) to the index page, based on
+   the store's payment-acceptance signage (PAYGATE by スマレジ): credit/debit cards,
+   Japan QR/mobile payment (PayPay, d払い, 楽天ペイ, au PAY, メルペイ, WeChat Pay,
+   UnionPay QR), and international e-wallets (Alipay+, Alipay, AlipayHK, GCash,
+   Touch 'n Go eWallet, TrueMoney). **Please double-check:** the icons used are
+   generic pictograms (card / QR grid / phone outline) in the site's own line-art
+   style, not the exact brand logos from the photo — recreating trademarked logos
+   (Visa, PayPay, Alipay, etc.) as artwork isn't something this tool does, to avoid
+   any trademark issues. Let me know if plain icons + brand names in text is fine,
+   or if you'd rather source the official logo images yourselves and have me wire
+   them in. Also, there was one icon on the sign I couldn't confidently identify
+   (a yellow "Pay" mark) — if it's a payment method not already listed above, let
+   me know which one so it can be added.
+8. **Tax-free shopping notice** — ✅ added (2026-11-08) to every product page and the
+   index page, reflecting Japan's tax-free system reform that took effect
+   2026-11-01: customers now pay the tax-included price in store and claim the
+   refund at the airport on departure (passport + receipt, within 90 days), rather
+   than getting an on-the-spot discount at checkout. Source: Japan Tourism Agency
+   (観光庁) — https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00021.html
+9. **"Which jacket fits your trip?" charts** — ✅ added (2026-11-08) to the index
+   page: a 5-axis chart (Resort / Powder / Off-piste / Touring / Cold) per jacket,
+   so the fit is visible at a glance. **Please double-check:** the 1–5 scores on
+   each axis are my own editorial read of each product's existing spec copy, not
+   data from UPLND or Haglöfs — please sanity-check them against how your staff
+   would actually position each jacket, especially Alper Proof (scored high on
+   Resort only) and Nallo (scored high on Touring/Off-piste only).
+10. All text was rewritten in the Agent's own words from the factual specs (not copied
+    verbatim from UPLND's marketing copy, nor from any other source material provided),
+    to avoid any copyright concerns. Feel free to adjust tone/wording further.
 
 ## Adding real product photos
 
