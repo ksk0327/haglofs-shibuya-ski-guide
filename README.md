@@ -151,6 +151,9 @@ provided. Status as of the latest update:
     to make out at its original size next to the much larger product photo above it,
     so it's now shown much bigger (up to 340px, labeled "Fit chart"). The index page's
     charts (next to the small thumbnail) are unchanged.
+17. **Index-page thumbnail size** — ✅ enlarged (2026-11-12): the small product photo in
+    each "Which jacket fits your trip?" row was increased from 64px to 92px wide (card
+    column widened from 54%→58% of the row, chart column 46%→42%, to make room).
 
 ## Adding real product photos
 

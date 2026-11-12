@@ -128,15 +128,15 @@ a { color: inherit; }
 .radar-row:first-child { padding-top: 10px; }
 .radar-row:last-child { border-bottom: none; }
 .radar-row-card {
-  flex: 1 1 54%;
+  flex: 1 1 58%;
   min-width: 0;
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: 92px 1fr;
   gap: 10px;
   align-items: start;
 }
 .radar-row-thumb {
-  width: 64px;
+  width: 92px;
   aspect-ratio: 4 / 5;
   background: var(--sand);
   border-radius: 8px;
@@ -167,7 +167,7 @@ a { color: inherit; }
   border-radius: 999px;
   color: var(--muted);
 }
-.radar-row-chart { flex: 1 1 46%; min-width: 0; text-align: center; }
+.radar-row-chart { flex: 1 1 42%; min-width: 0; text-align: center; }
 .radar-row-chart img {
   width: 100%;
   max-width: 190px;
