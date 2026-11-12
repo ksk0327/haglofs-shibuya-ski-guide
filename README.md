@@ -23,12 +23,42 @@ ski-series/
 │   ├── style.css                  ← single shared stylesheet, no framework
 │   └── img/                       ← EMPTY — see "Adding real photos" below
 ├── tools/
-│   └── build_products.py          ← regenerates all product pages from structured data
+│   └── build_products.py          ← single source of truth — see below
 └── README.md                      ← this file
 ```
 
 No JavaScript is used anywhere. No build step, no npm, no dependencies — these are plain
 HTML files that can be opened directly in a browser or served by any static host.
+
+## One script drives (almost) everything — `tools/build_products.py`
+
+As of 2026-11-12, running:
+
+```
+python3 tools/build_products.py
+```
+
+regenerates all three of the following from the same per-product data, so a change only
+needs to be made in **one place**:
+
+1. All 5 files in `products/` (full product detail pages).
+2. Each product's fit-chart SVG at `assets/img/radar-<slug>.svg` (the 5-axis
+   Resort/Powder/Off-piste/Touring/Cold chart).
+3. Just the "Which jacket fits your trip?" rows inside `index.html` — the block between
+   the `<!-- RADAR_LIST:START -->` / `<!-- RADAR_LIST:END -->` HTML comments. Everything
+   else in `index.html` (intro text, the quick-compare table, payment methods) is still
+   hand-maintained and untouched by the script.
+
+To change a fit-chart score, a mini-spec chip, a card tag, or similar: find that
+product's `build(...)` call in `tools/build_products.py`, edit the relevant keyword
+argument (`radar_scores`, `mini_specs`, `card_tag`, `card_name`, `thumb_src`,
+`thumb_alt`, `radar_alt`), then re-run the script above. Don't hand-edit the generated
+rows inside the `RADAR_LIST:START`/`END` block in `index.html` directly — they'll be
+overwritten the next time the script runs.
+
+(This replaced an earlier setup where the fit charts were a one-off script and
+`index.html`'s card content was typed by hand in two different places — worth knowing
+if you're looking at git history and wondering why those don't exist anymore.)
 
 ## Important: things to double-check before going live
 
@@ -86,7 +116,14 @@ provided. Status as of the latest update:
    [3,3,3,3,3], Latnja GTX Insulated [5,2,1,2,5], Nallo Touring GTX [3,3,4,5,1].
    Layout changed (2026-11-11) from a 2-column grid to a single vertical list —
    each jacket's own photo sits directly beside its chart, so it's unambiguous
-   which chart belongs to which jacket on a phone screen.
+   which chart belongs to which jacket on a phone screen. Updated again
+   (2026-11-12): the separate product-listing grid at the top of the index page
+   was removed, and its full card content (photo, tag, name, Japanese name,
+   mini-specs) was merged directly into each row of this list, so every jacket
+   now appears only once on the page — as one row with its card on the left and
+   its fit chart on the right — instead of twice. The same fit chart was also
+   added to each individual product page (just below the "Best for" badge),
+   since previously it only existed on the index page.
 10. **Price wording** — ✅ changed (2026-11-11) from "reference price — please
     confirm in store" (which read as uncertain) to "(tax included) — final total
     confirmed at checkout", a more reassuring phrasing.
@@ -117,8 +154,8 @@ nothing has been swapped in yet). To add real photos:
    ```html
    <div class="slide"><img src="../assets/img/vassi-gtx-pro-ii-1.jpg" alt="Vassi GTX Pro II Jacket — front"></div>
    ```
-3. Do the same for the small thumbnail on that product's card in `index.html`
-   (`.product-card .thumb`).
+3. Do the same for the small thumbnail on that product's row in `index.html`
+   (`.radar-row-thumb`, inside its `.radar-row-card`).
 
 Make sure whoever supplies the photos has the right to use them (official Haglöfs/brand
 assets, or new photos taken in-store) — these were deliberately **not** scraped from the
@@ -129,7 +166,8 @@ UPLND reference pages.
 Two ways to do this — pick whichever is easier at the time:
 
 **A. Quick/manual:** copy an existing file in `products/` as a starting point, edit the
-text, and add a card for it in `index.html`'s `.product-grid` and `.compare` table.
+text, and add a row for it in `index.html`'s `.radar-list` and `.compare` table. You'll
+also need a 5-axis fit chart SVG at `assets/img/radar-<slug>.svg` (see the next section).
 
 **B. Scripted (recommended for several products at once):** open `tools/build_products.py`,
 copy one of the `build(...)` calls near the bottom, change its values for the new product,
@@ -141,7 +179,11 @@ python3 tools/build_products.py
 ```
 
 This regenerates every file in `products/` from scratch — it's safe to re-run any time.
-(`index.html`'s product grid and compare table are not auto-generated; update those by hand.)
+Each product page automatically includes its fit chart at `assets/img/radar-<slug>.svg`
+(set by the `slug` you give it) — make sure that file exists before regenerating, or the
+image will show broken on that page.
+(`index.html`'s "Which jacket fits your trip?" list and compare table are not
+auto-generated; update those by hand.)
 
 ## Deploy to GitHub Pages
 

@@ -1,8 +1,126 @@
 # -*- coding: utf-8 -*-
-"""Generates the 5 Haglöfs ski-series product pages from structured data."""
+"""Generates the 5 Haglöfs ski-series product pages from structured data.
+
+Also regenerates (from the same per-product data given to build()):
+  - each product's "fit chart" radar SVG in assets/img/radar-<slug>.svg
+  - the card+chart rows inside index.html's "Which jacket fits your trip?"
+    list (everything between the RADAR_LIST markers in index.html)
+
+This keeps all three in sync from one script, so a future score/spec/text
+change only needs editing here once, then `python3 tools/build_products.py`.
+The rest of index.html (intro, compare table, payment methods) is still
+hand-maintained — only the marked block is touched.
+"""
+import math
 import os
+import re
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "products")
+IMG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "img")
+INDEX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "index.html")
+
+# ---------------------------------------------------------------
+# Fit-chart radar SVG generator (5-axis: Resort / Powder / Off-piste /
+# Touring / Cold). Ported from the original one-off script so it now lives
+# alongside the data it draws from.
+# ---------------------------------------------------------------
+RADAR_AXES = ["Resort", "Powder", "Off-piste", "Touring", "Cold"]
+RADAR_ACCENT = "#b0251f"
+RADAR_MUTED = "#6b6b6b"
+RADAR_LINE = "#e4e1dc"
+RADAR_SIZE = 280
+RADAR_CX = RADAR_CY = RADAR_SIZE / 2
+RADAR_R = 58
+RADAR_LABEL_R = RADAR_R + 32
+
+def _radar_point(i, value, max_value=5):
+    angle = -math.pi / 2 + i * (2 * math.pi / len(RADAR_AXES))
+    r = (value / max_value) * RADAR_R
+    return RADAR_CX + r * math.cos(angle), RADAR_CY + r * math.sin(angle)
+
+def _radar_label_point(i):
+    angle = -math.pi / 2 + i * (2 * math.pi / len(RADAR_AXES))
+    return RADAR_CX + RADAR_LABEL_R * math.cos(angle), RADAR_CY + RADAR_LABEL_R * math.sin(angle)
+
+def radar_svg(slug, values):
+    rings = []
+    for ring_v in [1, 2, 3, 4, 5]:
+        pts = [_radar_point(i, ring_v) for i in range(len(RADAR_AXES))]
+        pts_str = " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+        rings.append(f'<polygon points="{pts_str}" fill="none" stroke="{RADAR_LINE}" stroke-width="1"/>')
+    spokes = []
+    for i in range(len(RADAR_AXES)):
+        x, y = _radar_point(i, 5)
+        spokes.append(f'<line x1="{RADAR_CX}" y1="{RADAR_CY}" x2="{x:.1f}" y2="{y:.1f}" stroke="{RADAR_LINE}" stroke-width="1"/>')
+    data_pts = [_radar_point(i, v) for i, v in enumerate(values)]
+    data_str = " ".join(f"{x:.1f},{y:.1f}" for x, y in data_pts)
+    dots = []
+    for (x, y) in data_pts:
+        dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{RADAR_ACCENT}"/>')
+    labels = []
+    for i, name in enumerate(RADAR_AXES):
+        x, y = _radar_label_point(i)
+        anchor = "middle"
+        if x < RADAR_CX - 12: anchor = "end"
+        elif x > RADAR_CX + 12: anchor = "start"
+        dy = 0
+        if y < RADAR_CY - 12: dy = -2
+        elif y > RADAR_CY + 12: dy = 9
+        labels.append(f'<text x="{x:.1f}" y="{y+dy:.1f}" text-anchor="{anchor}" font-size="10.5" fill="{RADAR_MUTED}" font-family="Helvetica Neue, Arial, sans-serif">{name}</text>')
+
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {RADAR_SIZE} {RADAR_SIZE}" role="img" aria-label="{slug} fit chart">
+  {''.join(rings)}
+  {''.join(spokes)}
+  <polygon points="{data_str}" fill="{RADAR_ACCENT}" fill-opacity="0.10" stroke="{RADAR_ACCENT}" stroke-width="2.2"/>
+  {''.join(dots)}
+  {''.join(labels)}
+</svg>'''
+
+def write_radar_svg(slug, values):
+    out_path = os.path.join(IMG_DIR, f"radar-{slug}.svg")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(radar_svg(slug, values))
+
+# Collects one entry per product (in build() call order) so index.html's
+# radar-list can be regenerated after all build() calls have run.
+INDEX_ROWS = []
+
+def radar_row_html(row):
+    return f'''      <a class="radar-row" href="products/{row['slug']}.html">
+        <div class="radar-row-card">
+          <div class="radar-row-thumb"><img src="{row['thumb_src']}" alt="{row['thumb_alt']}"></div>
+          <div class="card-tag">{row['card_tag']}</div>
+          <h3>{row['card_name']}</h3>
+          <p class="jp-name">{row['name_jp']}</p>
+          <div class="mini-specs">
+            {''.join(f'<span>{s}</span>' for s in row['mini_specs'])}
+          </div>
+        </div>
+        <div class="radar-row-chart">
+          <img src="assets/img/radar-{row['slug']}.svg" loading="eager" decoding="sync" alt="{row['radar_alt']}">
+        </div>
+      </a>'''
+
+def update_index_radar_list():
+    """Replace the content between the RADAR_LIST markers in index.html with
+    freshly generated rows built from INDEX_ROWS. Everything else in
+    index.html (intro, compare table, payment methods) is left untouched."""
+    with open(INDEX_PATH, encoding="utf-8") as f:
+        html = f.read()
+    new_block = '\n'.join(radar_row_html(r) for r in INDEX_ROWS)
+    pattern = re.compile(
+        r"(<!-- RADAR_LIST:START -->\n)(.*?)(\n *<!-- RADAR_LIST:END -->)",
+        re.DOTALL,
+    )
+    if not pattern.search(html):
+        raise RuntimeError(
+            "RADAR_LIST:START / RADAR_LIST:END markers not found in index.html — "
+            "can't auto-update the radar list. Check index.html wasn't edited to remove them."
+        )
+    html = pattern.sub(lambda m: m.group(1) + new_block + m.group(3), html)
+    with open(INDEX_PATH, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"updated {INDEX_PATH} ({len(INDEX_ROWS)} radar rows)")
 
 PLACEHOLDER_ICON = '''<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 20V9l8-5 8 5v11M4 20h16M9 20v-6h6v6"/></svg>'''
 
@@ -133,6 +251,9 @@ TEMPLATE = '''<!doctype html>
     <p class="price">{price}<small>{price_note}</small></p>
     <p class="currency-note">Paying in another currency? Rates vary by country and change daily — search &quot;JPY to [your currency]&quot; online for today's rate.</p>
     <div class="best-for">Best for: {best_for}</div>
+    <div class="radar-chart-block">
+      <img src="../assets/img/radar-{slug}.svg" loading="eager" decoding="sync" alt="{name_en} fit chart (Resort / Powder / Off-piste / Touring / Cold)">
+    </div>
   </div>
 
   <div class="key-features">
@@ -172,7 +293,7 @@ TEMPLATE = '''<!doctype html>
     <div class="avail-grid">
 {sizes}
     </div>
-    <p class="stock-note">Styles and sizes shown above are what this store carries — please ask staff to confirm what\'s currently in stock.</p>
+    <p class="stock-note">Styles and sizes shown above are what this store carries — please ask staff to confirm what's currently in stock.</p>
   </section>
 
   <section class="section-block">
@@ -183,11 +304,11 @@ TEMPLATE = '''<!doctype html>
   </section>
 
   <div class="staff-note">
-    <strong>Tax-free shopping:</strong> Japan\'s tax refund system changed in November 2026 — you now pay the tax-included price here in store, then claim a refund of the consumption tax when you leave Japan. Show your passport and receipt at the tax refund counter at the airport (within 90 days of purchase). Ask staff for details.
+    <strong>Tax-free shopping:</strong> Japan's tax refund system changed in November 2026 — you now pay the tax-included price here in store, then claim a refund of the consumption tax when you leave Japan. Show your passport and receipt at the tax refund counter at the airport (within 90 days of purchase). Ask staff for details.
   </div>
 
   <div class="staff-note">
-    Not sure which one fits your trip? Show this page to any Haglöfs Shibuya staff member — we\'re happy to help in English.
+    Not sure which one fits your trip? Show this page to any Haglöfs Shibuya staff member — we're happy to help in English.
   </div>
 
 </div>
@@ -195,7 +316,7 @@ TEMPLATE = '''<!doctype html>
 <footer class="site-footer">
   <div class="wrap">
     <span>Haglöfs Shibuya · RCT Japan</span>
-    <span>Ask any staff member if you\'d like help in English.</span>
+    <span>Ask any staff member if you'd like help in English.</span>
   </div>
 </footer>
 
@@ -207,7 +328,9 @@ TEMPLATE = '''<!doctype html>
 
 def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
           gallery_labels, kf_items, about, features, specs_rows,
-          size_headers, size_rows, size_note, colors, sizes, best_for, images=None):
+          size_headers, size_rows, size_note, colors, sizes, best_for, images=None,
+          card_tag=None, card_name=None, mini_specs=None, thumb_src=None,
+          thumb_alt=None, radar_scores=None, radar_alt=None):
     gallery = gallery_images_html(images) if images else gallery_html(gallery_labels)
     key_features = kf_html(kf_items)
     feat_list = feature_list_html(features)
@@ -235,7 +358,7 @@ def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
     related = related_html(ALL_PRODUCTS, slug)
 
     html = TEMPLATE.format(
-        name_en=name_en, name_jp=name_jp, model_number=model_number,
+        slug=slug, name_en=name_en, name_jp=name_jp, model_number=model_number,
         price=price, price_note=price_note, meta_desc=meta_desc,
         gallery=gallery, key_features=key_features, about=about,
         features=feat_list, specs=specs, size_section=size_section,
@@ -246,6 +369,27 @@ def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
     print("wrote", out_path)
+
+    # Index-page radar chart + card row (optional: only products that pass
+    # all of these fields get a regenerated chart + row; lets this be
+    # adopted incrementally if a product is ever added without them).
+    if radar_scores is not None:
+        write_radar_svg(slug, radar_scores)
+        print("wrote", os.path.join(IMG_DIR, f"radar-{slug}.svg"))
+    if None not in (card_tag, mini_specs, thumb_src, thumb_alt, radar_scores, radar_alt):
+        # Index-page cards show the shorter Japanese name without the
+        # trailing "〔メンズ〕" (Men's) qualifier the product page uses.
+        card_jp_name = re.sub(r"\s*〔.*?〕\s*$", "", name_jp)
+        INDEX_ROWS.append({
+            "slug": slug,
+            "card_tag": card_tag,
+            "card_name": card_name or name_en,
+            "name_jp": card_jp_name,
+            "mini_specs": mini_specs,
+            "thumb_src": thumb_src,
+            "thumb_alt": thumb_alt,
+            "radar_alt": radar_alt,
+        })
 
 
 # ---------------------------------------------------------------
@@ -316,6 +460,13 @@ build(
          "alt": "Vassi GTX Pro II Jacket, True Black / Chlorophyll Green colorway, back",
          "caption": "True Black / Chlorophyll Green — Back"},
     ],
+    card_tag="Freeride Shell",
+    card_name="Vassi GTX Pro II Jacket",
+    mini_specs=["GORE-TEX Pro", "28,000mm", "665g"],
+    thumb_src="assets/img/vassi-gtx-pro-ii-purple-night-evening-front.webp",
+    thumb_alt="Vassi GTX Pro II Jacket",
+    radar_scores=[3, 5, 5, 4, 2],
+    radar_alt="Vassi GTX Pro II fit chart: strongest for powder and off-piste",
 )
 
 # ---------------------------------------------------------------
@@ -399,6 +550,13 @@ build(
          "alt": "Vassi GTX II Jacket, Teak Brown / Woodland colorway, back",
          "caption": "Teak Brown / Woodland — Back"},
     ],
+    card_tag="Freeride Shell",
+    card_name="Vassi GTX II Jacket",
+    mini_specs=["GORE-TEX", "28,000mm", "720g"],
+    thumb_src="assets/img/vassi-gtx-ii-dew-green-front.webp",
+    thumb_alt="Vassi GTX II Jacket",
+    radar_scores=[3, 4, 4, 3, 3],
+    radar_alt="Vassi GTX II fit chart: balanced, strongest for powder and off-piste",
 )
 
 # ---------------------------------------------------------------
@@ -475,6 +633,13 @@ build(
          "alt": "Alper Proof Jacket, True Black colorway, back",
          "caption": "True Black — Back"},
     ],
+    card_tag="All-Mountain Shell",
+    card_name="Alper Proof Jacket",
+    mini_specs=["PROOF™ Pro", "20,000mm", "670g"],
+    thumb_src="assets/img/alper-proof-northern-blue-tarn-blue-front.webp",
+    thumb_alt="Alper Proof Jacket",
+    radar_scores=[3, 3, 3, 3, 3],
+    radar_alt="Alper Proof fit chart: evenly balanced all-around",
 )
 
 # ---------------------------------------------------------------
@@ -555,6 +720,13 @@ build(
          "alt": "Latnja GTX Insulated Jacket, Turn Blue colorway, back",
          "caption": "Turn Blue — Back"},
     ],
+    card_tag="Insulated",
+    card_name="Latnja GTX Insulated Jacket",
+    mini_specs=["GORE-TEX 2L", "28,000mm", "860g"],
+    thumb_src="assets/img/latnja-gtx-insulated-chalk-beige-front.webp",
+    thumb_alt="Latnja GTX Insulated Jacket",
+    radar_scores=[5, 2, 1, 2, 5],
+    radar_alt="Latnja GTX Insulated fit chart: strongest for resort skiing and cold weather",
 )
 
 # ---------------------------------------------------------------
@@ -624,6 +796,15 @@ build(
          "alt": "Nallo Touring GTX Jacket, Chlorophyll Green colorway, back",
          "caption": "Chlorophyll Green — Back"},
     ],
+    card_tag="Ski Touring Shell",
+    card_name="Nallo Touring GTX Jacket",
+    mini_specs=["GORE-TEX", "28,000mm", "407g"],
+    thumb_src="assets/img/nallo-touring-gtx-chalk-beige-front.webp",
+    thumb_alt="Nallo Touring GTX Jacket",
+    radar_scores=[3, 3, 4, 5, 1],
+    radar_alt="Nallo Touring GTX fit chart: strongest for touring, also strong off-piste",
 )
+
+update_index_radar_list()
 
 print("done")
