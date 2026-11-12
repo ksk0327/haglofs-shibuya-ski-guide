@@ -141,6 +141,16 @@ provided. Status as of the latest update:
 14. All text was rewritten in the Agent's own words from the factual specs (not copied
     verbatim from UPLND's marketing copy, nor from any other source material provided),
     to avoid any copyright concerns. Feel free to adjust tone/wording further.
+15. **Japanese jacket names removed** — ✅ changed (2026-11-12): every page previously
+    showed the Japanese product name under the English one (`.jp-name`). Since this
+    site is for inbound, non-Japanese-speaking customers, 建部さん asked for it to be
+    removed everywhere (product pages and the index-page cards). The `name_jp` data
+    is still kept in `tools/build_products.py` (harmless, unused) in case it's wanted
+    again later — it's just no longer rendered anywhere.
+16. **Fit-chart size on product pages** — ✅ enlarged (2026-11-12): the chart was hard
+    to make out at its original size next to the much larger product photo above it,
+    so it's now shown much bigger (up to 340px, labeled "Fit chart"). The index page's
+    charts (next to the small thumbnail) are unchanged.
 
 ## Adding real product photos
 

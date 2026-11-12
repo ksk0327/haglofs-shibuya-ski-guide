@@ -91,7 +91,6 @@ def radar_row_html(row):
           <div class="radar-row-thumb"><img src="{row['thumb_src']}" alt="{row['thumb_alt']}"></div>
           <div class="card-tag">{row['card_tag']}</div>
           <h3>{row['card_name']}</h3>
-          <p class="jp-name">{row['name_jp']}</p>
           <div class="mini-specs">
             {''.join(f'<span>{s}</span>' for s in row['mini_specs'])}
           </div>
@@ -247,11 +246,11 @@ TEMPLATE = '''<!doctype html>
   <div class="product-head">
     <div class="model-tag">Haglöfs · Style {model_number}</div>
     <h1>{name_en}</h1>
-    <p class="jp-name">{name_jp}</p>
     <p class="price">{price}<small>{price_note}</small></p>
     <p class="currency-note">Paying in another currency? Rates vary by country and change daily — search &quot;JPY to [your currency]&quot; online for today's rate.</p>
     <div class="best-for">Best for: {best_for}</div>
     <div class="radar-chart-block">
+      <p class="radar-chart-caption">Fit chart</p>
       <img src="../assets/img/radar-{slug}.svg" loading="eager" decoding="sync" alt="{name_en} fit chart (Resort / Powder / Off-piste / Touring / Cold)">
     </div>
   </div>
