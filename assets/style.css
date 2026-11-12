@@ -172,37 +172,63 @@ a { color: inherit; }
 }
 
 /* ---------- Fit-finder radar charts (index page) ---------- */
-.radar-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 6px 0;
-  margin: 10px 0 36px;
+.radar-note { font-size: 12px; color: var(--muted); margin: -4px 0 4px; }
+.radar-list { margin: 10px 0 36px; }
+.radar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
 }
-.radar-card { text-align: center; }
-.radar-card img { width: 100%; height: auto; aspect-ratio: 1 / 1; display: block; }
-.radar-card .radar-name {
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: -6px;
+.radar-row:first-child { padding-top: 10px; }
+.radar-row:last-child { border-bottom: none; }
+.radar-row-photo {
+  flex: 0 0 72px;
+  width: 72px;
+  aspect-ratio: 4 / 5;
+  background: var(--sand);
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
 }
-.radar-note { font-size: 12px; color: var(--muted); margin: -24px 0 0; }
+.radar-row-photo img { width: 100%; height: 100%; object-fit: cover; }
+.radar-row-chart { flex: 1 1 auto; min-width: 0; text-align: center; }
+.radar-row-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.radar-row-chart img {
+  width: 100%;
+  max-width: 190px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+  margin: 0 auto;
+}
 
-/* ---------- Payment methods (index page) ---------- */
-.payment-grid {
-  display: grid;
-  gap: 14px;
-  margin: 14px 0 0;
+/* ---------- Payment methods (index page, bottom, compact) ---------- */
+.payment-compact {
+  margin: 8px 0 32px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
-.payment-row { display: flex; gap: 12px; align-items: flex-start; }
-.payment-row svg { width: 26px; height: 26px; flex: 0 0 auto; color: var(--accent); margin-top: 2px; }
-.payment-row .payment-label {
+.payment-compact h3 {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  margin: 0 0 3px;
+  font-weight: 700;
+  margin: 0 0 12px;
 }
-.payment-row .payment-list { font-size: 13.5px; }
+.payment-compact .payment-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; }
+.payment-compact .payment-row:last-child { margin-bottom: 0; }
+.payment-compact .payment-row svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--muted); margin-top: 2px; }
+.payment-compact .payment-row .payment-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 2px;
+}
+.payment-compact .payment-row .payment-list { font-size: 11.5px; color: var(--ink); margin: 0; }
 
 /* ---------- Quick compare table (index page) ---------- */
 .compare-wrap { overflow-x: auto; margin: 10px 0 44px; }
@@ -315,6 +341,7 @@ table.compare td a { color: var(--accent); text-decoration: none; font-weight: 7
 .product-head .jp-name { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
 .product-head .price { font-size: 15px; font-weight: 700; margin: 6px 0 0; }
 .product-head .price small { font-weight: 400; color: var(--muted); font-size: 11.5px; }
+.currency-note { font-size: 11.5px; color: var(--muted); margin: 6px 0 0; }
 .best-for {
   display: inline-block;
   background: var(--accent-soft);
@@ -440,6 +467,21 @@ table.size thead th { background: var(--sand); }
   padding: 5px 12px;
   color: var(--ink);
 }
+.avail-grid .chip-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+}
+.chip-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  flex: 0 0 auto;
+  display: inline-block;
+}
+.stock-note { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
 
 /* ---------- Related / compare products ---------- */
 .related-grid {
@@ -483,3 +525,20 @@ table.size thead th { background: var(--sand); }
 @media (min-width: 600px) {
   .site-footer .wrap { flex-direction: row; justify-content: space-between; }
 }
+
+/* ---------- Sticky "ask staff" bar (product pages) ---------- */
+body.has-ask-bar { padding-bottom: 54px; }
+.ask-staff-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12.5px;
+  text-align: center;
+  padding: 11px 16px;
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+}
+.ask-staff-bar strong { color: #fff; }

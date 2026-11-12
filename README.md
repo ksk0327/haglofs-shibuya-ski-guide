@@ -51,21 +51,27 @@ provided. Status as of the latest update:
    information is already on each product's physical in-store tag and doesn't need to
    be duplicated on the online guide. All "Certification" / "Water repellent finish"
    rows and related bullet points were removed across every product for consistency.
-6. **Currency conversion** — intentionally not added. 建部さん chose payment methods
-   only, no currency conversion (exchange rates would need ongoing upkeep).
-7. **Accepted payment methods** — ✅ added (2026-11-08) to the index page, based on
-   the store's payment-acceptance signage (PAYGATE by スマレジ): credit/debit cards,
-   Japan QR/mobile payment (PayPay, d払い, 楽天ペイ, au PAY, メルペイ, WeChat Pay,
-   UnionPay QR), and international e-wallets (Alipay+, Alipay, AlipayHK, GCash,
-   Touch 'n Go eWallet, TrueMoney). **Please double-check:** the icons used are
-   generic pictograms (card / QR grid / phone outline) in the site's own line-art
-   style, not the exact brand logos from the photo — recreating trademarked logos
-   (Visa, PayPay, Alipay, etc.) as artwork isn't something this tool does, to avoid
-   any trademark issues. Let me know if plain icons + brand names in text is fine,
-   or if you'd rather source the official logo images yourselves and have me wire
-   them in. Also, there was one icon on the sign I couldn't confidently identify
-   (a yellow "Pay" mark) — if it's a payment method not already listed above, let
-   me know which one so it can be added.
+6. **Currency conversion** — ✅ resolved (2026-11-12): no fixed exchange rate is shown
+   (rates change daily and a traveler could be from any country, so a hard-coded
+   number would go stale or simply not cover their currency). Each product page has
+   a small note under the price suggesting the customer search "JPY to [their
+   currency]" themselves — needs no upkeep and works for anyone. A fully-automatic
+   version (JavaScript fetching a live rate on page load) was discussed and declined
+   by 建部さん: it would need the customer's phone to have a working internet
+   connection in that moment, and would depend on a free external rate service
+   staying available — 建部さん preferred the simpler, dependency-free text hint.
+   The note no longer suggests asking staff for the rate (removed 2026-11-12, since
+   staff can't know a given visitor's home currency either).
+7. **Accepted payment methods** — ✅ added (2026-11-08), based on the store's
+   payment-acceptance signage (PAYGATE by スマレジ): credit/debit cards, Japan
+   QR/mobile payment (PayPay, d払い, 楽天ペイ, au PAY, メルペイ, WeChat Pay, UnionPay
+   QR), and international e-wallets (Alipay+, Alipay, AlipayHK, GCash, Touch 'n Go
+   eWallet, TrueMoney). 建部さん confirmed generic pictogram icons (not exact brand
+   logos, for trademark reasons) + the text list are fine. Moved to the very bottom
+   of the index page (2026-11-11) and shrunk, since it's lower-priority information
+   than the product content above it. One icon on the original sign (a yellow "Pay"
+   mark) couldn't be confidently identified — if it's a method not already listed
+   above, let 建部さん know which one so it can be added.
 8. **Tax-free shopping notice** — ✅ added (2026-11-08) to every product page and the
    index page, reflecting Japan's tax-free system reform that took effect
    2026-11-01: customers now pay the tax-included price in store and claim the
@@ -73,13 +79,29 @@ provided. Status as of the latest update:
    than getting an on-the-spot discount at checkout. Source: Japan Tourism Agency
    (観光庁) — https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00021.html
 9. **"Which jacket fits your trip?" charts** — ✅ added (2026-11-08) to the index
-   page: a 5-axis chart (Resort / Powder / Off-piste / Touring / Cold) per jacket,
-   so the fit is visible at a glance. **Please double-check:** the 1–5 scores on
-   each axis are my own editorial read of each product's existing spec copy, not
-   data from UPLND or Haglöfs — please sanity-check them against how your staff
-   would actually position each jacket, especially Alper Proof (scored high on
-   Resort only) and Nallo (scored high on Touring/Off-piste only).
-10. All text was rewritten in the Agent's own words from the factual specs (not copied
+   page: a 5-axis chart (Resort / Powder / Off-piste / Touring / Cold) per jacket.
+   The 1–5 scores were editorial starting points, then adjusted by 建部さん over
+   several rounds to match how staff actually position each jacket — current
+   scores: Vassi GTX Pro II [3,5,5,4,2], Vassi GTX II [3,4,4,3,3], Alper Proof
+   [3,3,3,3,3], Latnja GTX Insulated [5,2,1,2,5], Nallo Touring GTX [3,3,4,5,1].
+   Layout changed (2026-11-11) from a 2-column grid to a single vertical list —
+   each jacket's own photo sits directly beside its chart, so it's unambiguous
+   which chart belongs to which jacket on a phone screen.
+10. **Price wording** — ✅ changed (2026-11-11) from "reference price — please
+    confirm in store" (which read as uncertain) to "(tax included) — final total
+    confirmed at checkout", a more reassuring phrasing.
+11. **Color swatches** — ✅ added (2026-11-11): each colorway chip on a product page
+    now shows a small color dot (or a split dot for two-tone colorways) so the
+    color is visible without scrolling back up to the gallery photos. Swatch colors
+    are approximate (mapped from the colorway name), not exact Pantone matches.
+12. **Stock-availability note** — ✅ added (2026-11-11) under the Colors & Sizes
+    section on every product page: "please ask staff to confirm what's currently
+    in stock," since the site can't show real-time inventory.
+13. **Sticky "Ask staff" bar** — ✅ added (2026-11-11): a small bar now stays pinned
+    to the bottom of the screen on every product page (not the index page), so the
+    "ask any staff member" prompt stays visible no matter how far the customer has
+    scrolled down a long product page.
+14. All text was rewritten in the Agent's own words from the factual specs (not copied
     verbatim from UPLND's marketing copy, nor from any other source material provided),
     to avoid any copyright concerns. Feel free to adjust tone/wording further.
 

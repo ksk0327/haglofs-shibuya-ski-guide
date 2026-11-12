@@ -50,6 +50,40 @@ def size_table_html(headers, rows):
 def chips_html(items):
     return '\n'.join(f'      <span class="chip">{i}</span>' for i in items)
 
+# Approximate swatch colors for named colorways (for the small color dot next
+# to each chip — not exact pantone matches, just enough to tell them apart
+# at a glance without scrolling back up to the photos).
+COLOR_HEX = {
+    "true black": "#1a1a1a",
+    "black": "#1a1a1a",
+    "purple night": "#3a2c4d",
+    "evening": "#2b3a55",
+    "chlorophyll green": "#4c7a3f",
+    "seaweed green": "#33502f",
+    "dew green": "#8aa98a",
+    "teak brown": "#6b4a35",
+    "woodland": "#4a4a33",
+    "chalk beige": "#cdc3b0",
+    "tarn blue": "#466a86",
+    "turn blue": "#466a86",
+    "northern blue": "#1f3a63",
+}
+
+def _swatch_color(token):
+    return COLOR_HEX.get(token.strip().lower(), "#bbbbbb")
+
+def color_chip_html(name):
+    parts = [p.strip() for p in name.split("/")]
+    if len(parts) == 2:
+        c1, c2 = _swatch_color(parts[0]), _swatch_color(parts[1])
+        swatch = f'<span class="chip-swatch" style="background: linear-gradient(135deg, {c1} 50%, {c2} 50%);"></span>'
+    else:
+        swatch = f'<span class="chip-swatch" style="background: {_swatch_color(parts[0])};"></span>'
+    return f'      <span class="chip chip-color">{swatch}{name}</span>'
+
+def color_chips_html(items):
+    return '\n'.join(color_chip_html(i) for i in items)
+
 def related_html(items, current_slug):
     out = []
     for slug, name, spec in items:
@@ -62,7 +96,7 @@ ALL_PRODUCTS = [
     ("vassi-gtx-pro-ii", "Vassi GTX Pro II Jacket", "28,000mm WP / 665g"),
     ("vassi-gtx-ii", "Vassi GTX II Jacket", "28,000mm WP / 720g"),
     ("alper-proof", "Alper Proof Jacket", "20,000mm WP / 670g"),
-    ("latnja-gtx-insulated", "Latnja GTX Insulated Jacket", "Insulated / see staff"),
+    ("latnja-gtx-insulated", "Latnja GTX Insulated Jacket", "28,000mm WP / 860g (insulated)"),
     ("nallo-touring-gtx", "Nallo Touring GTX Jacket", "28,000mm WP / 407g — lightest"),
 ]
 
@@ -75,7 +109,7 @@ TEMPLATE = '''<!doctype html>
 <meta name="description" content="{meta_desc}">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
-<body>
+<body class="has-ask-bar">
 
 <header class="site-header">
   <div class="wrap">
@@ -97,6 +131,8 @@ TEMPLATE = '''<!doctype html>
     <h1>{name_en}</h1>
     <p class="jp-name">{name_jp}</p>
     <p class="price">{price}<small>{price_note}</small></p>
+    <p class="currency-note">Paying in another currency? Rates vary by country and change daily — search &quot;JPY to [your currency]&quot; online for today's rate.</p>
+    <div class="best-for">Best for: {best_for}</div>
   </div>
 
   <div class="key-features">
@@ -136,6 +172,7 @@ TEMPLATE = '''<!doctype html>
     <div class="avail-grid">
 {sizes}
     </div>
+    <p class="stock-note">Styles and sizes shown above are what this store carries — please ask staff to confirm what\'s currently in stock.</p>
   </section>
 
   <section class="section-block">
@@ -146,7 +183,11 @@ TEMPLATE = '''<!doctype html>
   </section>
 
   <div class="staff-note">
-    Not sure which one fits your trip? Show this page to any Haglöfs Shibuya staff member — we're happy to help in English.
+    <strong>Tax-free shopping:</strong> Japan\'s tax refund system changed in November 2026 — you now pay the tax-included price here in store, then claim a refund of the consumption tax when you leave Japan. Show your passport and receipt at the tax refund counter at the airport (within 90 days of purchase). Ask staff for details.
+  </div>
+
+  <div class="staff-note">
+    Not sure which one fits your trip? Show this page to any Haglöfs Shibuya staff member — we\'re happy to help in English.
   </div>
 
 </div>
@@ -154,9 +195,11 @@ TEMPLATE = '''<!doctype html>
 <footer class="site-footer">
   <div class="wrap">
     <span>Haglöfs Shibuya · RCT Japan</span>
-    <span>Ask any staff member if you'd like help in English.</span>
+    <span>Ask any staff member if you\'d like help in English.</span>
   </div>
 </footer>
+
+<div class="ask-staff-bar">Need help deciding? <strong>Ask any staff member</strong> — happy to help in English.</div>
 
 </body>
 </html>
@@ -164,7 +207,7 @@ TEMPLATE = '''<!doctype html>
 
 def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
           gallery_labels, kf_items, about, features, specs_rows,
-          size_headers, size_rows, size_note, colors, sizes, images=None):
+          size_headers, size_rows, size_note, colors, sizes, best_for, images=None):
     gallery = gallery_images_html(images) if images else gallery_html(gallery_labels)
     key_features = kf_html(kf_items)
     feat_list = feature_list_html(features)
@@ -173,6 +216,7 @@ def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
     if size_headers:
         head, body = size_table_html(size_headers, size_rows)
         size_section = f'''    <h2>Size chart (cm)</h2>
+    <p class="scroll-hint">Swipe left to see all columns &rarr;</p>
     <div class="size-table-wrap">
       <table class="size">
         <thead><tr>{head}</tr></thead>
@@ -186,7 +230,7 @@ def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
         size_section = f'''    <h2>Size chart</h2>
     <p>{size_note}</p>'''
 
-    colors_html = chips_html(colors)
+    colors_html = color_chips_html(colors)
     sizes_html = chips_html(sizes)
     related = related_html(ALL_PRODUCTS, slug)
 
@@ -196,6 +240,7 @@ def build(slug, name_en, name_jp, model_number, price, price_note, meta_desc,
         gallery=gallery, key_features=key_features, about=about,
         features=feat_list, specs=specs, size_section=size_section,
         colors=colors_html, sizes=sizes_html, related=related,
+        best_for=best_for,
     )
     out_path = os.path.join(OUT_DIR, f"{slug}.html")
     with open(out_path, "w", encoding="utf-8") as f:
@@ -212,7 +257,7 @@ build(
     name_jp="ヴァッシ ゴアテックス プロ II ジャケット〔メンズ〕",
     model_number="608577",
     price="¥126,500",
-    price_note=" reference price — please confirm in store",
+    price_note=" (tax included) — final total confirmed at checkout",
     meta_desc="Haglöfs Vassi GTX Pro II freeride ski jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
@@ -238,16 +283,12 @@ build(
         "Wide velcro cuff adjusters",
         "Drawcord hem",
         "RECCO® reflector for avalanche rescue search",
-        "PFAS-free water-repellent (DWR) finish",
-        "bluesign® approved fabric",
     ],
     specs_rows=[
-        ("Shell fabric", "3-layer GORE-TEX Pro, 100% recycled polyamide, 70 denier"),
+        ("Shell fabric", "3-layer GORE-TEX Pro, 100% recycled polyamide, 70 denier (denier = fabric thickness; higher = tougher, more durable)"),
         ("Waterproofness", "28,000mm"),
         ("Breathability (RET)", "13.5 — lower RET = more breathable"),
         ("Weight", "665g (men's size L)"),
-        ("Water repellent finish", "PFAS-free DWR"),
-        ("Certification", "bluesign® approved"),
     ],
     size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
     size_rows=[
@@ -257,9 +298,10 @@ build(
         ["XL", "139.5", "128.0", "130.0", "86.0", "89.0"],
         ["XXL", "145.5", "134.0", "136.0", "87.0", "90.5"],
     ],
-    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. Reference model is 166cm tall, shown in size M.",
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Purple Night / Evening", "True Black / Chlorophyll Green"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    best_for="Freeride & backcountry skiing — deep snow, long days, technical terrain",
     images=[
         {"src": "../assets/img/vassi-gtx-pro-ii-purple-night-evening-front.webp",
          "alt": "Vassi GTX Pro II Jacket, Purple Night / Evening colorway, front",
@@ -285,7 +327,7 @@ build(
     name_jp="ヴァッシ ゴアテックス II ジャケット〔メンズ〕",
     model_number="608574",
     price="¥93,500",
-    price_note=" reference price — please confirm in store",
+    price_note=" (tax included) — final total confirmed at checkout",
     meta_desc="Haglöfs Vassi GTX II freeride ski jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
@@ -310,18 +352,14 @@ build(
         "Articulated elbows",
         "Wide velcro cuff adjusters",
         "Drawcord hem",
-        "RECCO® reflector",
-        "PFAS-free water-repellent (DWR) finish",
-        "bluesign® approved fabric",
+        "RECCO® reflector — a built-in chip that helps rescuers locate you if buried in an avalanche",
     ],
     specs_rows=[
-        ("Shell fabric", "3-layer GORE-TEX, 100% recycled polyester, 75 denier"),
-        ("Membrane", "PFAS-free GORE-TEX ePE laminate"),
+        ("Shell fabric", "3-layer GORE-TEX, 100% recycled polyester, 75 denier (denier = fabric thickness; higher = tougher, more durable)"),
+        ("Membrane", "GORE-TEX ePE laminate (a 2-layer waterproof membrane)"),
         ("Waterproofness", "28,000mm"),
-        ("Breathability (RET)", "20"),
+        ("Breathability (RET)", "20 — lower RET = more breathable; 20 is a solid everyday resort/freeride level"),
         ("Weight", "720g (men's size L)"),
-        ("Water repellent finish", "PFAS-free DWR"),
-        ("Certification", "bluesign® approved"),
     ],
     size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
     size_rows=[
@@ -334,6 +372,7 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Purple Night", "Teak Brown / Woodland", "Dew Green", "Tarn Blue"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    best_for="Everyday resort & freeride skiing — great all-round value",
     images=[
         {"src": "../assets/img/vassi-gtx-ii-dew-green-front.webp",
          "alt": "Vassi GTX II Jacket, Dew Green colorway, front",
@@ -371,7 +410,7 @@ build(
     name_jp="アルパー プルーフ ジャケット〔メンズ〕",
     model_number="607936",
     price="¥59,400",
-    price_note=" reference price — please confirm in store",
+    price_note=" (tax included) — final total confirmed at checkout",
     meta_desc="Haglöfs Alper Proof all-mountain ski jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
@@ -394,9 +433,9 @@ build(
         "Wide velcro cuff adjusters",
     ],
     specs_rows=[
-        ("Shell fabric", "3-layer PROOF™ Pro, 100% recycled polyester, 75 denier"),
+        ("Shell fabric", "3-layer PROOF™ Pro, 100% recycled polyester, 75 denier (denier = fabric thickness; higher = tougher, more durable)"),
         ("Waterproofness", "20,000mm"),
-        ("Breathability", "20,000 g/m²/24h"),
+        ("Breathability", "20,000 g/m²/24h (higher number = more breathable; a solid everyday resort level)"),
         ("Weight", "670g (men's size L)"),
     ],
     size_headers=["Size", "Chest", "Waist width", "Hem width", "Body length", "Sleeve length"],
@@ -409,6 +448,7 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. No XXL in this style.",
     colors=["Northern Blue / Tarn Blue", "Seaweed Green / Chlorophyll Green", "Teak Brown", "True Black"],
     sizes=["S", "M", "L", "XL"],
+    best_for="All-mountain resort skiing — best value shell in this lineup",
     images=[
         {"src": "../assets/img/alper-proof-northern-blue-tarn-blue-front.webp",
          "alt": "Alper Proof Jacket, Northern Blue / Tarn Blue colorway, front",
@@ -446,7 +486,7 @@ build(
     name_jp="ラティニャ ゴアテックス インシュレイテッド ジャケット〔メンズ〕",
     model_number="607469",
     price="¥69,300",
-    price_note=" reference price — please confirm in store",
+    price_note=" (tax included) — final total confirmed at checkout",
     meta_desc="Haglöfs Latnja GTX Insulated ski jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, on mountain"],
     kf_items=[
@@ -467,15 +507,14 @@ build(
         "2 zippered hand pockets, 1 large chest pocket, 1 ski-pass sleeve pocket",
         "Stretch wrist gaiters under adjustable velcro cuffs",
         "Adjustable drawcord hem",
-        "PFAS-free DWR finish",
-        "RECCO® reflector",
+        "RECCO® reflector — a built-in chip that helps rescuers locate you if buried in an avalanche",
     ],
     specs_rows=[
-        ("Shell fabric", "75 denier, 100% recycled polyester / GORE-TEX® 2L ePE"),
+        ("Shell fabric", "75 denier, 100% recycled polyester / GORE-TEX® 2L ePE (denier = fabric thickness; ePE = a 2-layer waterproof membrane)"),
         ("Lining", "100% recycled polyester"),
         ("Insulation", "100% recycled polyester / Mimic SILVER, body-mapped across 3 zones"),
         ("Waterproofness", "28,000mm"),
-        ("Breathability (RET)", "RET > 13"),
+        ("Breathability (RET)", "RET > 13 — lower RET = more breathable; this is a warm, cold-weather level"),
         ("Weight", "860g (men's size L)"),
     ],
     size_headers=["Size", "Chest", "Waist width", "Shoulder width", "Body length", "Sleeve length"],
@@ -489,6 +528,7 @@ build(
     size_note="All measurements in cm, garment laid flat (external measurements). Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige", "Turn Blue", "True Black"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    best_for="Cold resort days & lift-served touring — when you don't want to layer a midlayer",
     images=[
         {"src": "../assets/img/latnja-gtx-insulated-chalk-beige-front.webp",
          "alt": "Latnja GTX Insulated Jacket, Chalk Beige colorway, front",
@@ -526,7 +566,7 @@ build(
     name_jp="ナロ ツーリング ゴアテックス ジャケット〔メンズ〕",
     model_number="608333",
     price="¥97,900",
-    price_note=" reference price — please confirm in store",
+    price_note=" (tax included) — final total confirmed at checkout",
     meta_desc="Haglöfs Nallo Touring GTX ski touring jacket — specs, features and size chart for international customers.",
     gallery_labels=["Front", "Back / hood detail", "Worn, touring"],
     kf_items=[
@@ -549,18 +589,14 @@ build(
         "Articulated sleeves for freedom of movement",
         "Adjustable cuffs and hem",
         "Twiceme® technology — NFC tag shares medical/location info with first responders",
-        "PFAS-free DWR finish",
-        "bluesign® approved fabric",
     ],
     specs_rows=[
-        ("Face fabric", "100% recycled polyamide, 30 denier, 3-layer GORE-TEX ripstop"),
+        ("Face fabric", "100% recycled polyamide, 30 denier, 3-layer GORE-TEX ripstop (denier = fabric thickness; higher = tougher, more durable)"),
         ("Lining", "100% polyamide"),
         ("Pocket mesh", "95% polyamide, 5% polyurethane"),
         ("Waterproofness", "28,000mm"),
-        ("Breathability (RET)", "13"),
+        ("Breathability (RET)", "13 — lower RET = more breathable; this is a highly breathable, touring-friendly level"),
         ("Weight", "407g (men's size L)"),
-        ("Water repellent finish", "PFAS-free DWR"),
-        ("Certification", "bluesign® approved"),
     ],
     size_headers=["Size", "Chest", "Hem width", "Waist", "Body length", "Sleeve length"],
     size_rows=[
@@ -573,6 +609,7 @@ build(
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige"],
     sizes=["S", "M", "L", "XL", "XXL"],
+    best_for="Ski touring & uphill travel — lightest option in this lineup",
     images=[
         {"src": "../assets/img/nallo-touring-gtx-chalk-beige-front.webp",
          "alt": "Nallo Touring GTX Jacket, Chalk Beige colorway, front",
