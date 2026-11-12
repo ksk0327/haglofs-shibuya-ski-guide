@@ -89,10 +89,12 @@ def radar_row_html(row):
     return f'''      <a class="radar-row" href="products/{row['slug']}.html">
         <div class="radar-row-card">
           <div class="radar-row-thumb"><img src="{row['thumb_src']}" alt="{row['thumb_alt']}"></div>
-          <div class="card-tag">{row['card_tag']}</div>
-          <h3>{row['card_name']}</h3>
-          <div class="mini-specs">
-            {''.join(f'<span>{s}</span>' for s in row['mini_specs'])}
+          <div class="radar-row-info">
+            <div class="card-tag">{row['card_tag']}</div>
+            <h3>{row['card_name']}</h3>
+            <div class="mini-specs">
+              {''.join(f'<span>{s}</span>' for s in row['mini_specs'])}
+            </div>
           </div>
         </div>
         <div class="radar-row-chart">

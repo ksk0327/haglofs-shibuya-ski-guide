@@ -154,6 +154,13 @@ provided. Status as of the latest update:
 17. **Index-page thumbnail size** — ✅ enlarged (2026-11-12): the small product photo in
     each "Which jacket fits your trip?" row was increased from 64px to 92px wide (card
     column widened from 54%→58% of the row, chart column 46%→42%, to make room).
+18. **Index-page card layout bug** — ✅ fixed (2026-11-12): the thumbnail, tag, product
+    name and mini-specs were all direct children of a 2-column CSS grid
+    (`.radar-row-card`), so the grid's row-by-row auto-placement put the product name
+    underneath the photo instead of next to it (visible once the thumbnail grew —
+    建部さん caught this). Fixed by wrapping the tag/name/specs in their own
+    `.radar-row-info` container, so the grid only has 2 real columns: photo, then
+    text. This freed up room to enlarge the photo again, to 118px.
 
 ## Adding real product photos
 

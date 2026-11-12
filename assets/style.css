@@ -128,46 +128,47 @@ a { color: inherit; }
 .radar-row:first-child { padding-top: 10px; }
 .radar-row:last-child { border-bottom: none; }
 .radar-row-card {
-  flex: 1 1 58%;
+  flex: 1 1 60%;
   min-width: 0;
   display: grid;
-  grid-template-columns: 92px 1fr;
+  grid-template-columns: 118px 1fr;
   gap: 10px;
   align-items: start;
 }
 .radar-row-thumb {
-  width: 92px;
+  width: 118px;
   aspect-ratio: 4 / 5;
   background: var(--sand);
   border-radius: 8px;
   overflow: hidden;
 }
 .radar-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.radar-row-card .card-tag {
+.radar-row-info { min-width: 0; }
+.radar-row-info .card-tag {
   font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 700;
 }
-.radar-row-card h3 {
+.radar-row-info h3 {
   font-size: 14px;
   line-height: 1.25;
   margin: 4px 0 7px;
 }
-.radar-row-card .mini-specs {
+.radar-row-info .mini-specs {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
 }
-.radar-row-card .mini-specs span {
+.radar-row-info .mini-specs span {
   font-size: 9.5px;
   background: var(--sand);
   padding: 2px 7px;
   border-radius: 999px;
   color: var(--muted);
 }
-.radar-row-chart { flex: 1 1 42%; min-width: 0; text-align: center; }
+.radar-row-chart { flex: 1 1 40%; min-width: 0; text-align: center; }
 .radar-row-chart img {
   width: 100%;
   max-width: 190px;
