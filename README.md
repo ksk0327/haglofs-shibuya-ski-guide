@@ -99,9 +99,10 @@ provided. Status as of the latest update:
    eWallet, TrueMoney). 建部さん confirmed generic pictogram icons (not exact brand
    logos, for trademark reasons) + the text list are fine. Moved to the very bottom
    of the index page (2026-11-11) and shrunk, since it's lower-priority information
-   than the product content above it. One icon on the original sign (a yellow "Pay"
-   mark) couldn't be confidently identified — if it's a method not already listed
-   above, let 建部さん know which one so it can be added.
+   than the product content above it. ✅ resolved (2026-11-12): one icon on the
+   original sign (a yellow "Pay" mark) was never confidently identified — likely
+   one of the Chinese QR-payment brands, per 建部さん — and was intentionally left
+   off the list rather than guessed at. No action needed unless it's identified later.
 8. **Tax-free shopping notice** — ✅ added (2026-11-08) to every product page and the
    index page, reflecting Japan's tax-free system reform that took effect
    2026-11-01: customers now pay the tax-included price in store and claim the
@@ -161,6 +162,35 @@ provided. Status as of the latest update:
     建部さん caught this). Fixed by wrapping the tag/name/specs in their own
     `.radar-row-info` container, so the grid only has 2 real columns: photo, then
     text. This freed up room to enlarge the photo again, to 118px.
+19. **"Fit chart" label on the index page** — ✅ added (2026-11-12): the small caption
+    was already on each product page's chart; now the index page's charts have the
+    same label (smaller size, to fit the narrower column), for consistency.
+20. **Payment sign's unidentified yellow icon** — ✅ dropped (2026-11-12): per 建部さん,
+    likely one of the Chinese QR-payment brands, but can't be confirmed, so it's
+    intentionally left off the payment-methods list rather than guessed at.
+21. **Cross-checked against the UPLND reference pages** (2026-11-12) — 建部さん asked for
+    a pass comparing every product's price/specs/colorways against the live UPLND
+    product pages (uplnd.com/products/<style-number>). Results:
+    - Vassi GTX Pro II, Vassi GTX II, Nallo Touring GTX: everything matches exactly,
+      no changes.
+    - **Fixed a real typo:** Latnja GTX Insulated's "Turn Blue" colorway was renamed
+      to "Tarn Blue" everywhere (display text, alt text, captions) — "Turn Blue" isn't
+      a real Haglöfs colorway name, this was simply a misspelling. Image filenames
+      were left as-is (internal only, not shown to customers).
+    - **Colors — resolved (2026-11-12):** 建部さん confirmed the colorways already
+      shown on this site are the complete, correct set carried in the Shibuya store
+      (the extra colorways on UPLND's full online catalog — e.g. Alper Proof's
+      "Deep Teal" and "Carmine Red / Tech Red" — are simply not stocked here). No
+      changes needed.
+    - **Sizes — resolved (2026-11-12):** every product page now shows sizes S–XL only
+      (previously some pages also listed XXL). Per 建部さん, whether XXL exists
+      depends on the specific item/color and isn't worth tracking per-SKU on this
+      site, so the sizes shown are capped at S–XL everywhere and the note under
+      "Colors & sizes" was reworded to: "Sizes shown above run S–XL. Some items and
+      colors may also be available in other sizes (e.g. XXL) depending on style —
+      please ask staff to confirm what's currently in stock." Alper Proof's old
+      product-specific "No XXL in this style" wording was removed since the shared
+      note now covers it.
 
 ## Adding real product photos
 

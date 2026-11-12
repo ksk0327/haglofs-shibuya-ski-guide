@@ -98,6 +98,7 @@ def radar_row_html(row):
           </div>
         </div>
         <div class="radar-row-chart">
+          <p class="radar-chart-caption radar-chart-caption-sm">Fit chart</p>
           <img src="assets/img/radar-{row['slug']}.svg" loading="eager" decoding="sync" alt="{row['radar_alt']}">
         </div>
       </a>'''
@@ -294,7 +295,7 @@ TEMPLATE = '''<!doctype html>
     <div class="avail-grid">
 {sizes}
     </div>
-    <p class="stock-note">Styles and sizes shown above are what this store carries — please ask staff to confirm what's currently in stock.</p>
+    <p class="stock-note">Sizes shown above run S–XL. Some items and colors may also be available in other sizes (e.g. XXL) depending on style — please ask staff to confirm what's currently in stock.</p>
   </section>
 
   <section class="section-block">
@@ -441,11 +442,10 @@ build(
         ["M", "127.5", "116.0", "118.0", "84.0", "85.5"],
         ["L", "133.5", "122.0", "124.0", "85.0", "87.5"],
         ["XL", "139.5", "128.0", "130.0", "86.0", "89.0"],
-        ["XXL", "145.5", "134.0", "136.0", "87.0", "90.5"],
     ],
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Purple Night / Evening", "True Black / Chlorophyll Green"],
-    sizes=["S", "M", "L", "XL", "XXL"],
+    sizes=["S", "M", "L", "XL"],
     best_for="Freeride & backcountry skiing — deep snow, long days, technical terrain",
     images=[
         {"src": "../assets/img/vassi-gtx-pro-ii-purple-night-evening-front.webp",
@@ -519,11 +519,10 @@ build(
         ["M", "124.0", "115.5", "117.5", "81.5", "85.0"],
         ["L", "130.0", "121.5", "123.5", "82.5", "87.0"],
         ["XL", "136.0", "127.5", "129.5", "83.5", "88.5"],
-        ["XXL", "142.0", "133.5", "135.5", "84.5", "90.0"],
     ],
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Purple Night", "Teak Brown / Woodland", "Dew Green", "Tarn Blue"],
-    sizes=["S", "M", "L", "XL", "XXL"],
+    sizes=["S", "M", "L", "XL"],
     best_for="Everyday resort & freeride skiing — great all-round value",
     images=[
         {"src": "../assets/img/vassi-gtx-ii-dew-green-front.webp",
@@ -604,7 +603,7 @@ build(
         ["L", "130.0", "121.0", "123.0", "82.5", "88.0"],
         ["XL", "136.0", "127.0", "129.0", "83.5", "89.5"],
     ],
-    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value. No XXL in this style.",
+    size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Northern Blue / Tarn Blue", "Seaweed Green / Chlorophyll Green", "Teak Brown", "True Black"],
     sizes=["S", "M", "L", "XL"],
     best_for="All-mountain resort skiing — best value shell in this lineup",
@@ -689,11 +688,10 @@ build(
         ["M", "124.0", "115.0", "50.5", "82.0", "85.5"],
         ["L", "130.0", "121.0", "52.5", "83.0", "87.5"],
         ["XL", "136.0", "127.0", "54.5", "84.0", "89.0"],
-        ["XXL", "142.0", "133.0", "56.5", "85.0", "90.5"],
     ],
     size_note="All measurements in cm, garment laid flat (external measurements). Multiply by 0.39 for an approximate inch value.",
-    colors=["Chlorophyll Green", "Chalk Beige", "Turn Blue", "True Black"],
-    sizes=["S", "M", "L", "XL", "XXL"],
+    colors=["Chlorophyll Green", "Chalk Beige", "Tarn Blue", "True Black"],
+    sizes=["S", "M", "L", "XL"],
     best_for="Cold resort days & lift-served touring — when you don't want to layer a midlayer",
     images=[
         {"src": "../assets/img/latnja-gtx-insulated-chalk-beige-front.webp",
@@ -715,11 +713,11 @@ build(
          "alt": "Latnja GTX Insulated Jacket, True Black colorway, back",
          "caption": "True Black — Back"},
         {"src": "../assets/img/latnja-gtx-insulated-turn-blue-front.webp",
-         "alt": "Latnja GTX Insulated Jacket, Turn Blue colorway, front",
-         "caption": "Turn Blue — Front"},
+         "alt": "Latnja GTX Insulated Jacket, Tarn Blue colorway, front",
+         "caption": "Tarn Blue — Front"},
         {"src": "../assets/img/latnja-gtx-insulated-turn-blue-back.webp",
-         "alt": "Latnja GTX Insulated Jacket, Turn Blue colorway, back",
-         "caption": "Turn Blue — Back"},
+         "alt": "Latnja GTX Insulated Jacket, Tarn Blue colorway, back",
+         "caption": "Tarn Blue — Back"},
     ],
     card_tag="Insulated",
     card_name="Latnja GTX Insulated Jacket",
@@ -777,11 +775,10 @@ build(
         ["M", "124.0", "118.0", "118.0", "78.5", "85.0"],
         ["L", "130.0", "124.0", "124.0", "79.5", "86.5"],
         ["XL", "136.0", "130.0", "130.0", "80.5", "88.5"],
-        ["XXL", "142.0", "136.0", "136.0", "81.5", "90.0"],
     ],
     size_note="All measurements in cm, garment laid flat. Multiply by 0.39 for an approximate inch value.",
     colors=["Chlorophyll Green", "Chalk Beige"],
-    sizes=["S", "M", "L", "XL", "XXL"],
+    sizes=["S", "M", "L", "XL"],
     best_for="Ski touring & uphill travel — lightest option in this lineup",
     images=[
         {"src": "../assets/img/nallo-touring-gtx-chalk-beige-front.webp",
