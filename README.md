@@ -328,6 +328,113 @@ provided. Status as of the latest update:
     since that's what's live today. Worth revisiting whether those should also unify
     with jackets once real products land in them.
 
+26. **First 8 women's products added — jackets + pants (2026-11-13), DRAFT, pending
+    confirmation.** 建部さん gave 8 product names mirroring 4 of the 5 men's model
+    families (no Nallo Touring GTX women's item was given): Vassi GTX Pro II
+    Jacket/Bib, Vassi GTX II Jacket/Pant, Alper Proof Jacket/Pant, Latnja GTX Insulated
+    Jacket/Pant — all women's (`gender="womens"`). She did not say whether she had
+    the women's model numbers/specs on hand, so — per her standing instruction to make
+    a reasonable assumption and say so when she doesn't answer — these were researched
+    directly from Haglöfs' own women's product pages (model numbers 607792, 607798,
+    607793, 607816, 607937, 607938, 607471, 607472) the same way the men's lineup was,
+    and **have not yet been checked against the physical in-store tags or photos**.
+    Several specific assumptions were made and need her review before launch:
+    - **Prices were assumed identical to the matching men's item** (e.g. Vassi GTX
+      Pro II Jacket Women = ¥126,500, same as the men's version) since Haglöfs
+      typically prices men's/women's versions of the same technology the same —
+      this has NOT been checked against any women's-specific pricing.
+    - **No cm size chart was available** from Haglöfs' women's product pages for any
+      of the 8 items (only "model is 174–177cm, wears size M" is given, no body
+      measurements) — all 8 show the same "ask staff" fallback note the Latnja GTX
+      Insulated Pant (men's) used in item 23.
+    - **Sizes shown are capped to `["S","M","L","XL"]`**, matching the site-wide rule
+      (item 10 / 2026-11-12) — but Haglöfs' women's sizing actually runs XS–XXL on
+      most of these items. Worth confirming with 建部さん whether this store's
+      women's stock actually starts at XS rather than S, since that's a real
+      difference from the men's line, not just a display simplification.
+    - **Waterproofness/breathability figures were assumed identical to the men's
+      version's shell technology** wherever the women's product page didn't restate
+      them (flagged inline in each item's specs table, e.g. "(assumed)") — several
+      Haglöfs women's pages give far less spec detail than the men's pages did.
+    - **Colors are a first-draft list** sourced from retailer listings (outnorth,
+      alpinstore, snowleader, etc.), not yet confirmed against this store's actual
+      stock — needs the same photo-based color confirmation 建部さん did for the
+      men's lineup (items 21 and 24) once she can send photos.
+    - **No real photos yet** for any of the 8 — each shows the same dashed/house-icon
+      placeholder as a new product without photos.
+    - Fit-chart (`radar_scores`) for each women's item mirrors its matching men's
+      counterpart exactly (same shell/insulation technology, same axes per item 25) —
+      e.g. Alper Proof Jacket Women uses the same `[3,3,3,3,3]` as Alper Proof Jacket
+      Men.
+    - **Self-caught fix while adding these:** the "Compare with other ___ in this
+      category" section on every product page was comparing across genders (e.g. a
+      women's jacket page would list men's jackets as its comparison set) since the
+      category only had one gender in it until now. Fixed so `related_html` filters
+      by the product's own gender as well as its category — verified via a visual
+      check of the Vassi GTX Pro II Jacket Women page before this fix (showed men's
+      jackets in the compare list) and after (shows only the other 3 women's jackets).
+
+27. **Women's model numbers corrected + 6 of 8 items confirmed with real photos, 2
+    new Nallo Touring GTX women's items added (2026-11-13, round 2).** 建部さん sent
+    real in-store photos for 6 of the 8 draft women's items from item 26, plus 2
+    brand-new women's products not in the original list (Nallo Touring GTX
+    Jacket/Pant Women — the men's lineup's 5th model family, which she hadn't
+    mentioned having in women's sizing until these photos arrived).
+    - **Critical model-number fix for all 4 "Vassi family" women's items.** The
+      draft model numbers in item 26 (607792, 607798, 607793, 607816) turned out to
+      be from an older/different Haglöfs catalog season. Haglöfs' current own site
+      lists these same 4 products under different numbers — 608582 (Vassi GTX Pro II
+      Jacket Women), 608581 (Vassi GTX Pro II Bib Women), 608578 (Vassi GTX II Jacket
+      Women), 608580 (Vassi GTX II Pant Women) — confirmed by cross-checking against
+      photo filename prefixes once photos for the other 6 items showed the same
+      pattern (filenames are `<model_number><color_code>_..._1440x.webp`, and every
+      other item's filename model number matched Haglöfs' current site exactly).
+      **Model numbers in `build_products.py` corrected to 608582/608581/608578/608580.**
+    - **Photo-recovery gap — now resolved.** The actual in-store photos for these
+      same 4 Vassi-family items were lost on our side earlier in this round (a
+      technical issue with this chat session, before they could be saved). 建部さん
+      resent all 4 batches (22 photos total, front + back per colorway) later the
+      same day, and every photo's filename prefix (`608582...`, `608581...`,
+      `608578...`, `608580...`) matched the model numbers and colors already
+      corrected above exactly — strong independent confirmation that the
+      Haglöfs-current-site research was right. All 4 products now have real
+      front/back photos wired in, same as the other 6.
+    - **Colors corrected for all 4 Vassi-family items** (previous draft guesses were
+      wrong — sourced from the wrong catalog season): Vassi GTX Pro II Jacket Women
+      is now True Black / Chlorophyll Green, Maroon Trail / Misty Mauve (was True
+      Black / Chlorophyll Green, Lantana Pink / Oak Brown). Vassi GTX Pro II Bib
+      Women is now True Black, Dew Green, Misty Mauve (was True Black, Woodland
+      Brown). Vassi GTX II Jacket Women is now Tarn Blue, Dew Green, Misty Mauve
+      (was Teak Brown / Woodland Brown, Dew Green, Misty Mauve). Vassi GTX II Pant
+      Women is now True Black, Tarn Blue, Chalk Beige (was True Black, Tarn Blue,
+      Woodland Brown).
+    - **Real photos added, colors corrected, for 6 confirmed items** — Alper Proof
+      Jacket Women (True Black, Teak Brown, Dew Green / Chlorophyll Green, Maroon
+      Trail / Misty Mauve — previous draft's "Tech Red / Carmine Red" guess was
+      wrong, no red colorway is in store), Alper Proof Pant Women (True Black, Tarn
+      Blue, Chlorophyll Green, Maroon Trail — previous "Carmine Red" guess dropped),
+      Latnja GTX Insulated Jacket Women (True Black, Tarn Blue, Chalk Beige,
+      Chlorophyll Green — fixed from "Seaweed Green"), Latnja GTX Insulated Pant
+      Women (True Black, Tarn Blue, Chalk Beige, Chlorophyll Green — "Carmine Red"
+      swapped for Chalk Beige, which is what's actually in store). Each item's photo
+      was viewed directly to confirm its color before adding it — only one in-store
+      photo per color was sent for these 6 items (no separate back-view shot), so
+      each of their `images` entries is a single front photo per colorway rather
+      than a front/back pair like the men's lineup. (The 4 Vassi-family items, by
+      contrast, got full front+back pairs — see above.)
+    - **2 new products added — not in 建部さん's original 8-item list:** Nallo
+      Touring GTX Jacket Women (model 608334, colors Chalk Beige / Misty Mauve) and
+      Nallo Touring GTX Pant Women (model 608336, colors True Black / Chalk Beige),
+      completing the 5th model family in women's sizing. Since Haglöfs' women's pages
+      for these two didn't restate full specs, weight/waterproofness/breathability
+      figures mirror the men's Nallo Touring GTX Jacket/Pant exactly and are flagged
+      "(assumed, mirrors men's version)" throughout — same approach as item 26.
+    - **Prices still not confirmed in JPY.** No JPY-denominated price could be found
+      for any of these 8 items — only DKK (Danish retail), EUR, and GBP listings.
+      The existing draft JPY prices from item 26 were kept as-is since they're close
+      to a rough DKK→JPY conversion of the newer official listings, but none of this
+      round's prices have been checked against this store's actual price tags.
+
 ## Adding real product photos
 
 Every photo slot on every page is currently a dashed placeholder box (so it's obvious
