@@ -435,6 +435,36 @@ provided. Status as of the latest update:
       to a rough DKK→JPY conversion of the newer official listings, but none of this
       round's prices have been checked against this store's actual price tags.
 
+28. **New "Ski" category added on top of Jackets/Pants (2026-11-13).** 建部さん
+    pointed out that skiing is Haglöfs' strongest category and asked for a
+    dedicated "Ski" tile on the homepage, rather than making the customer think
+    of it as "Jackets" and "Pants" separately. Implementation:
+    - A brand-new `category/ski.html` page was added, shown first in the "Shop by
+      category" grid on index.html (ahead of Jackets, which comes second) since
+      she called it out as the flagship category.
+    - This is a **cross-cutting activity view**, not a new garment-type category:
+      every current jacket and pant already has `"Ski"` in its `activity_tags`, so
+      the Ski page pulls in all of them (10 jackets + 10 pants = 20 styles) and
+      groups them into "Jackets" and "Pants" subsections, each with its own
+      quick-compare table — same Men's/Women's tab pattern as every other
+      category page, just with two subsections stacked inside each tab instead of
+      one flat list.
+    - **Jackets and Pants themselves are untouched and keep showing exactly what
+      they did before** — 建部さん specifically asked to keep them as general
+      garment-type categories, since she plans to add non-ski items to them later
+      (softshell, insulation, etc. for other activities). The new `ski_products_in()`
+      helper filters by `"Ski" in activity_tags` on top of the existing category
+      filter, so a future non-ski jacket added to the `jackets` category simply
+      won't show up on the Ski page — no further changes needed when that happens.
+    - The "Compare with other ___ in this category" section on individual product
+      pages is unaffected — it's still scoped to the product's own `category`
+      field (jackets or pants), not the new Ski grouping.
+    - Verified via a full rebuild + tag-balance check + visual check of
+      index.html (Ski tile now shows "20 styles", first in the grid) and
+      category/ski.html in both Men's and Women's tabs (Jackets section, its
+      compare table, then Pants section, then its compare table — all 20 styles
+      present, all images and compare-table links resolve correctly).
+
 ## Adding real product photos
 
 Every photo slot on every page is currently a dashed placeholder box (so it's obvious

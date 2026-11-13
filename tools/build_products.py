@@ -45,6 +45,11 @@ INDEX_PATH = os.path.join(BASE_DIR, "index.html")
 # ---------------------------------------------------------------
 CATEGORIES = [
     {
+        "slug": "ski",
+        "label": "Ski",
+        "blurb": "Haglöfs' strongest category — ski jackets and pants for resort, backcountry and touring, all in one place.",
+    },
+    {
         "slug": "jackets",
         "label": "Jackets",
         "blurb": "Shell & insulated jackets for resort, backcountry and touring.",
@@ -1662,6 +1667,15 @@ def products_in(category_slug, gender=None):
         out = [p for p in out if p["gender"] == gender]
     return out
 
+def ski_products_in(garment_category, gender=None):
+    """Products in a garment category (jackets/pants) tagged for skiing —
+    the cross-cutting activity filter that powers the standalone "Ski"
+    category page. Jackets/Pants themselves stay untouched and will keep
+    showing non-ski items too once those are added (hardshell, softshell,
+    insulation, etc. for other activities)."""
+    out = [p for p in products_in(garment_category, gender) if "Ski" in (p.get("activity_tags") or [])]
+    return out
+
 # ---------------------------------------------------------------
 # Product page template + builder
 # ---------------------------------------------------------------
@@ -1971,10 +1985,52 @@ def build_category_page(cat):
     print("wrote", out_path)
 
 # ---------------------------------------------------------------
+# "Ski" category page — a cross-cutting activity view on top of the
+# Jackets/Pants garment-type categories (added 2026-11-13). Those two
+# categories keep listing everything they always have (and will keep
+# growing with non-ski items later); this page just pulls out whichever
+# of their products are tagged "Ski" and groups them by garment type,
+# under the same Men's/Women's tab pattern as every other category page.
+# ---------------------------------------------------------------
+def ski_garment_section_html(garment_category, heading, gender, label):
+    products = ski_products_in(garment_category, gender)
+    if not products:
+        return f'    <h2 style="margin-top:0;">{heading}</h2>\n    <p class="category-empty-note">{label} {heading.lower()} are not yet available on this guide — ask staff in store, or check back soon.</p>'
+    rows = '\n'.join(radar_row_html(p, path_prefix="../") for p in products)
+    compare = compare_table_html(garment_category, products)
+    out = f'    <h2 style="margin-top:0;">{heading}</h2>\n    <div class="radar-list">\n{rows}\n    </div>'
+    if compare:
+        out += "\n" + compare
+    return out
+
+def ski_gender_panel_html(gender, label):
+    jackets_section = ski_garment_section_html("jackets", "Jackets", gender, label)
+    pants_section = ski_garment_section_html("pants", "Pants", gender, label)
+    return f"{jackets_section}\n\n    <div style=\"margin-top:32px;\"></div>\n\n{pants_section}"
+
+def ski_tile_count():
+    return len(ski_products_in("jackets")) + len(ski_products_in("pants"))
+
+SKI_CATEGORY_TEMPLATE = CATEGORY_TEMPLATE
+
+def build_ski_category_page(cat):
+    mens_panel = ski_gender_panel_html("mens", "Men's")
+    womens_panel = ski_gender_panel_html("womens", "Women's")
+    html = SKI_CATEGORY_TEMPLATE.format(
+        slug=cat["slug"], label=cat["label"], blurb=cat["blurb"],
+        meta_desc=f"{cat['label']} gear available at Haglöfs Shibuya — jackets and pants for resort, backcountry and touring, specs and sizing for international customers.",
+        mens_panel=mens_panel, womens_panel=womens_panel,
+    )
+    out_path = os.path.join(CATEGORY_DIR, f"{cat['slug']}.html")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print("wrote", out_path)
+
+# ---------------------------------------------------------------
 # index.html category-grid block
 # ---------------------------------------------------------------
 def category_tile_html(cat):
-    count = len(products_in(cat["slug"]))
+    count = ski_tile_count() if cat["slug"] == "ski" else len(products_in(cat["slug"]))
     if count == 0:
         return f'''      <div class="category-tile category-tile-soon">
         <div class="category-tile-label">{cat['label']}</div>
@@ -2017,7 +2073,10 @@ for product in PRODUCTS:
     build_product_page(product)
 
 for category in CATEGORIES:
-    build_category_page(category)
+    if category["slug"] == "ski":
+        build_ski_category_page(category)
+    else:
+        build_category_page(category)
 
 update_index_category_grid()
 
