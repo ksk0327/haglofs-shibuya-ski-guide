@@ -1,18 +1,48 @@
-# Haglöfs Shibuya — Ski Series Guide (QR product pages)
+# Haglöfs Shibuya — Shop Guide (QR product pages)
 
-Static, no-build, no-JavaScript website. Five English-language product pages for the
-Haglöfs ski jacket series, meant to be opened by scanning a QR code placed next to each
-jacket in the Shibuya store, mainly for inbound (non-Japanese-speaking) customers.
+Static, no-build, no-JavaScript website. English-language product pages for Haglöfs
+items carried at the Shibuya store, meant to be opened by scanning a QR code placed
+next to each item in store, mainly for inbound (non-Japanese-speaking) customers.
 
 This README is written so it can be handed directly to a local Claude Code session for
 deployment. If you are Claude Code reading this: follow "Deploy to GitHub Pages" below,
 asking the user to confirm anything that needs their GitHub account.
 
+## Multi-category architecture (added 2026-11-12)
+
+The site started as a single "ski jacket series" guide (5 jackets, one flat list on
+`index.html`). It's now a general shop guide that can grow to cover every product type
+the store carries, organized as:
+
+- **Top level — `index.html`:** a tile grid, one tile per **category** (product type):
+  Jackets, Pants, Base Layers, Mid Layers, Backpacks & Bags. A category with no products
+  yet shows as a greyed-out "Coming soon" tile, so the intended final shape of the site
+  is visible immediately — it activates on its own once products are added to it.
+- **Category pages — `category/<slug>.html`:** one page per category, e.g.
+  `category/jackets.html`. Each has a **Men's / Women's tab switch** (pure CSS, no
+  JavaScript — two radio buttons styled as pills) showing that gender's products as a
+  card + fit-chart list, plus a quick-compare table where defined. A gender with no
+  products yet shows a plain "not yet available" message instead of an empty list.
+- **Product pages — `products/<slug>.html`:** unchanged in spirit — this is still what
+  a QR code points to directly. Each links back up to its own category page (not
+  straight to the top-level index), and its "Compare with other ___" section only
+  lists products from the *same category* (not the whole site).
+
+Activity use-cases (e.g. "Ski") are **tags** on a product, shown as a small pill, not a
+separate category — so a ski jacket lives in exactly one place (`Jackets`), never
+duplicated under both "Jackets" and "Ski".
+
 ## What's in this folder
 
 ```
 ski-series/
-├── index.html                     ← landing page: all 5 jackets + a quick-compare table
+├── index.html                     ← category tile grid + site-wide info (intro, tax-free, payment)
+├── category/
+│   ├── jackets.html                   ← populated (5 products)
+│   ├── pants.html                      ← "coming soon" until products are added
+│   ├── base-layers.html                ← "
+│   ├── mid-layers.html                 ← "
+│   └── backpacks.html                  ← "
 ├── products/
 │   ├── vassi-gtx-pro-ii.html
 │   ├── vassi-gtx-ii.html
@@ -27,38 +57,48 @@ ski-series/
 └── README.md                      ← this file
 ```
 
-No JavaScript is used anywhere. No build step, no npm, no dependencies — these are plain
-HTML files that can be opened directly in a browser or served by any static host.
+No JavaScript is used anywhere (including the Men's/Women's tabs — pure CSS). No build
+step, no npm, no dependencies — these are plain HTML files that can be opened directly
+in a browser or served by any static host.
 
 ## One script drives (almost) everything — `tools/build_products.py`
 
-As of 2026-11-12, running:
+Running:
 
 ```
 python3 tools/build_products.py
 ```
 
-regenerates all three of the following from the same per-product data, so a change only
-needs to be made in **one place**:
+regenerates everything below from one `PRODUCTS` list (one dict per product — see the
+top of the script), so adding or changing a product is editing **one place**:
 
-1. All 5 files in `products/` (full product detail pages).
-2. Each product's fit-chart SVG at `assets/img/radar-<slug>.svg` (the 5-axis
-   Resort/Powder/Off-piste/Touring/Cold chart).
-3. Just the "Which jacket fits your trip?" rows inside `index.html` — the block between
-   the `<!-- RADAR_LIST:START -->` / `<!-- RADAR_LIST:END -->` HTML comments. Everything
-   else in `index.html` (intro text, the quick-compare table, payment methods) is still
-   hand-maintained and untouched by the script.
+1. Every file in `products/` (full product detail pages).
+2. Every product's fit-chart SVG at `assets/img/radar-<slug>.svg`. The 5 axis labels
+   depend on the product's `category` — see `AXIS_SETS` near the top of the script
+   (Jackets use Resort/Powder/Off-piste/Touring/Cold; Pants, Base Layers, Mid Layers
+   and Backpacks each have their own first-draft axis set, easy to rename once real
+   products of that type are being added).
+3. Every file in `category/` (one per entry in `CATEGORIES`) — the Men's/Women's tab
+   list and quick-compare table for that category, built from whichever `PRODUCTS`
+   entries have that `category`.
+4. Just the category-tile grid inside `index.html` — the block between the
+   `<!-- CATEGORY_GRID:START -->` / `<!-- CATEGORY_GRID:END -->` HTML comments.
+   Everything else in `index.html` (intro text, tax-free notice, payment methods) is
+   still hand-maintained and untouched by the script.
 
-To change a fit-chart score, a mini-spec chip, a card tag, or similar: find that
-product's `build(...)` call in `tools/build_products.py`, edit the relevant keyword
-argument (`radar_scores`, `mini_specs`, `card_tag`, `card_name`, `thumb_src`,
-`thumb_alt`, `radar_alt`), then re-run the script above. Don't hand-edit the generated
-rows inside the `RADAR_LIST:START`/`END` block in `index.html` directly — they'll be
+To add a new product: copy one of the `dict(...)` entries in the `PRODUCTS` list near
+the middle of `tools/build_products.py`, change its values (including `category`,
+`subcategory`, `gender`, `activity_tags`), then re-run the script above. Its product
+page, fit chart, and card on its category page all appear automatically — no other
+file needs hand-editing. Don't hand-edit the generated blocks inside `category/*.html`
+or the `CATEGORY_GRID:START`/`END` markers in `index.html` directly — they'll be
 overwritten the next time the script runs.
 
 (This replaced an earlier setup where the fit charts were a one-off script and
 `index.html`'s card content was typed by hand in two different places — worth knowing
-if you're looking at git history and wondering why those don't exist anymore.)
+if you're looking at git history and wondering why those don't exist anymore. The
+single-ski-jacket-list version of `index.html` was itself replaced by the
+multi-category tile grid on 2026-11-12 — see the architecture section above.)
 
 ## Important: things to double-check before going live
 
@@ -191,6 +231,84 @@ provided. Status as of the latest update:
       please ask staff to confirm what's currently in stock." Alper Proof's old
       product-specific "No XXL in this style" wording was removed since the shared
       note now covers it.
+22. **Multi-category architecture** — ✅ built (2026-11-12): 建部さん asked to start
+    adding pants, women's items, and non-ski categories going forward. Rather than
+    bolting these onto the flat ski-jacket list, the site was restructured first (see
+    "Multi-category architecture" near the top of this file): `index.html` is now a
+    category tile grid (Jackets / Pants / Base Layers / Mid Layers / Backpacks & Bags),
+    each category has its own page with CSS-only Men's/Women's tabs, and
+    `tools/build_products.py` generates all of it from one `PRODUCTS` data list. The
+    existing 5 ski jackets were migrated in as `category="jackets"`, `gender="mens"`,
+    `activity_tags=["Ski"]` (one of them, Nallo Touring GTX, also tagged `"Touring"`)
+    with no content changes. The 4 empty categories show as "Coming soon" tiles and
+    will activate automatically once products are added to them. Fit-chart axes for
+    the 4 not-yet-populated categories (Pants, Base Layers, Mid Layers, Backpacks) are
+    first-draft proposals in `AXIS_SETS` — worth a quick review with 建部さん before
+    the first real product in each lands, since they're easy to rename now and harder
+    to change once a fit-chart score has been set against them.
+23. **First 5 pants added — men's ski pants (2026-11-13), DRAFT, pending confirmation.**
+    建部さん gave the 5 product names (mirroring the jacket lineup): Vassi GTX Pro II
+    Bib, Vassi GTX II Pant, Alper Proof Pant, Nallo Touring GTX Pant, Latnja GTX
+    Insulated Pant — all men's. Specs/prices/colorways/size charts were sourced from
+    UPLND's reference product pages (model numbers 608576, 608575, 607939, 608335,
+    607470) the same way the original 5 jackets were, and **have not yet been checked
+    against the physical in-store tags** — treat everything below as a first draft,
+    the same way items 1–21 above started out for the jackets.
+    - All 5 use `sizes=["S","M","L","XL"]` (XXL dropped from the size rows, per the
+      site-wide S–XL rule 建部さん set on 2026-11-12) and the same shared stock-note
+      disclaimer as the jackets.
+    - **Latnja GTX Insulated Pant** is missing two things no reference source had: a
+      cm size chart (the product page currently shows a note asking customers to ask
+      staff instead of a table — every other product on the site has a real table, so
+      this one stands out and should get real measurements before launch) and a
+      confident weight figure (used 632g from Haglöfs' own SE site; UPLND didn't list
+      a weight; a different third-party retailer listed 600g). Its listed colorways
+      (6 — Chlorophyll Green, Chalk Beige, True Black, Tarn Blue, Woodland Brown,
+      Seaweed Green) are UPLND's full online range and, per the pattern already seen
+      with the jackets, likely include some colors this store doesn't actually stock —
+      needs the same "which of these are really on the shelf" check 建部さん did for
+      the jackets on 2026-11-12.
+    - ~~No real photos yet for any of the 5~~ — ✅ resolved, see item 24 below: real
+      photos and confirmed colorways are now in for all 5 pants.
+    - Prices assume the same "(tax included) — final total confirmed at checkout"
+      wording as the jackets; not yet checked against the in-store tags either.
+    - Alper Proof Pant's shell fabric spec omits a denier number (UPLND's page didn't
+      give one for this item, unlike its jacket counterpart's "75 denier") — worth
+      checking the physical tag for the real number.
+
+24. **Pants colorways confirmed + real photos added (2026-11-13).** 建部さん sent
+    in-store product photos for all 5 pants, one product per message, with the
+    instruction that each photo set represents the colors actually carried in this
+    store. Each photo's filename embeds the item's Haglöfs color-code suffix (e.g.
+    `...2C5` = True Black), which was cross-checked against Haglöfs' own product
+    pages / retailer listings for that exact model number:
+    - **Vassi GTX Pro II Bib** — True Black, Purple Night, Chlorophyll Green. Exact
+      match to the UPLND draft — no colorway change, just real photos added.
+    - **Vassi GTX II Pant** — True Black, Tarn Blue, Chalk Beige. Exact match to the
+      draft — no colorway change, just real photos added.
+    - **Alper Proof Pant** — True Black, Tarn Blue, Seaweed Green confirmed by photo.
+      **"Carmine Red" removed** from the colors list — no red pair was among the
+      photos sent, so per 建部さん's "this is what's on the shelf" framing it's
+      treated as not currently stocked here. (The Tarn Blue confirmation used the
+      same color-code suffix, `3N5`, that was separately confirmed as Tarn Blue on
+      both the Vassi GTX II Pant for this store and, directly, on Haglöfs' own site
+      for this exact Alper Proof Pant model — see sources below.)
+    - **Latnja GTX Insulated Pant** — True Black, Tarn Blue, Chalk Beige, Chlorophyll
+      Green confirmed by photo (4 of the original 6-color UPLND draft). **"Woodland
+      Brown" and "Seaweed Green" removed** — not among the photos sent, so not
+      currently stocked here, same reasoning as Alper Proof Pant above.
+    - **Nallo Touring GTX Pant** — Chalk Beige, True Black confirmed by photo — exact
+      match to the draft (this one only had 2 colors to begin with) — no colorway
+      change, just real photos added.
+    - All 5 products now have real front/back photos per confirmed colorway, replacing
+      every dashed-placeholder gallery and house-icon category-page thumbnail from
+      item 23. Weight, size-chart, and denier open questions from item 23 are
+      otherwise unchanged and still pending.
+    - Sources used to confirm the color-code → color-name mapping: Haglöfs' own
+      product pages (`haglofs.com/.../alper-proof-pant-men-6079392C5`, `...-6079393N5`,
+      `.../latnja-gtx-insulated-pant-men-6074705S9`, `...-6074705YE`), and retailer
+      listings on outnorth.com, mplusstore.es and alpinstore.com for the Vassi/Nallo
+      pants.
 
 ## Adding real product photos
 
@@ -204,8 +322,9 @@ nothing has been swapped in yet). To add real photos:
    ```html
    <div class="slide"><img src="../assets/img/vassi-gtx-pro-ii-1.jpg" alt="Vassi GTX Pro II Jacket — front"></div>
    ```
-3. Do the same for the small thumbnail on that product's row in `index.html`
-   (`.radar-row-thumb`, inside its `.radar-row-card`).
+3. If you're adding photos by hand rather than through `tools/build_products.py` (see
+   below), do the same for the small thumbnail on that product's row in its category
+   page, e.g. `category/jackets.html` (`.radar-row-thumb`, inside its `.radar-row-card`).
 
 Make sure whoever supplies the photos has the right to use them (official Haglöfs/brand
 assets, or new photos taken in-store) — these were deliberately **not** scraped from the
@@ -213,27 +332,37 @@ UPLND reference pages.
 
 ## Adding a new product later
 
-Two ways to do this — pick whichever is easier at the time:
+Open `tools/build_products.py`, copy one of the `dict(...)` entries in the `PRODUCTS`
+list, and change its values for the new product — most importantly:
 
-**A. Quick/manual:** copy an existing file in `products/` as a starting point, edit the
-text, and add a row for it in `index.html`'s `.radar-list` and `.compare` table. You'll
-also need a 5-axis fit chart SVG at `assets/img/radar-<slug>.svg` (see the next section).
+- `slug` — used for its URL (`products/<slug>.html`) and its fit-chart file name.
+- `category` — must match one of the slugs in `CATEGORIES` (`jackets`, `pants`,
+  `base-layers`, `mid-layers`, `backpacks`). This decides which category page it
+  appears on and which fit-chart axes it uses.
+- `gender` — `"mens"` or `"womens"`. Decides which tab it appears under on its
+  category page.
+- `activity_tags` — a list like `["Ski"]`, shown as small pills on its card and
+  product page. Not a category — just a label.
+- `radar_scores` — five 1–5 numbers matching that category's `AXIS_SETS` order.
 
-**B. Scripted (recommended for several products at once):** open `tools/build_products.py`,
-copy one of the `build(...)` calls near the bottom, change its values for the new product,
-and add it to the `ALL_PRODUCTS` list near the top (so it shows up in every other page's
-"Compare with other Ski Series jackets" section automatically). Then run:
+Then run:
 
 ```
 python3 tools/build_products.py
 ```
 
-This regenerates every file in `products/` from scratch — it's safe to re-run any time.
-Each product page automatically includes its fit chart at `assets/img/radar-<slug>.svg`
-(set by the `slug` you give it) — make sure that file exists before regenerating, or the
-image will show broken on that page.
-(`index.html`'s "Which jacket fits your trip?" list and compare table are not
-auto-generated; update those by hand.)
+This regenerates every product page, every category page, every fit-chart SVG, and
+the category-tile grid on `index.html` — it's safe to re-run any time. If the new
+product is the first one in a category that was previously empty, that category's
+"Coming soon" tile on `index.html` automatically turns into a real link.
+
+## Adding a whole new category later
+
+Add an entry to the `CATEGORIES` list (slug, label, blurb) and, if it needs its own
+fit-chart axes, an entry in `AXIS_SETS` keyed by that same slug (5 axis names). If you
+want a quick-compare table on that category's page, add an entry to `COMPARE_HEADERS`
+too and give each of that category's products a `compare` dict with matching keys.
+Then add products with that `category` value as above.
 
 ## Deploy to GitHub Pages
 
