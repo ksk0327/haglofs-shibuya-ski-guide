@@ -333,6 +333,7 @@ table.compare td a { color: var(--accent); text-decoration: none; font-weight: 7
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+.radar-chart-caption-sm { font-size: 9.5px; margin: 0 0 2px; }
 .radar-chart-block img {
   width: 100%;
   max-width: 340px;
