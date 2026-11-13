@@ -310,6 +310,24 @@ provided. Status as of the latest update:
       listings on outnorth.com, mplusstore.es and alpinstore.com for the Vassi/Nallo
       pants.
 
+25. **Pants fit-chart axes unified with jackets (2026-11-13).** 建部さん asked for the
+    "ski series" fit charts (jackets + pants) to use the same axes, rather than pants
+    having their own separate set. `AXIS_SETS["pants"]` was changed from
+    `["Warmth","Breathability","Mobility","Durability","Weather protection"]` to the
+    same `["Resort","Powder","Off-piste","Touring","Cold"]` used by jackets. Since
+    each pant is the bottom half of a matching jacket model (same shell/insulation
+    technology, same use case), each pant's `radar_scores` was set to mirror its
+    jacket counterpart exactly rather than re-scored from scratch:
+    - Vassi GTX Pro II Bib ← Vassi GTX Pro II Jacket: `[3, 5, 5, 4, 2]`
+    - Vassi GTX II Pant ← Vassi GTX II Jacket: `[3, 4, 4, 3, 3]`
+    - Alper Proof Pant ← Alper Proof Jacket: `[3, 3, 3, 3, 3]`
+    - Latnja GTX Insulated Pant ← Latnja GTX Insulated Jacket: `[5, 2, 1, 2, 5]`
+    - Nallo Touring GTX Pant ← Nallo Touring GTX Jacket: `[3, 3, 4, 5, 1]`
+    Base Layers / Mid Layers / Backpacks keep their own separate first-draft axes for
+    now (item 22) — this change was scoped to the ski series (jackets + pants) only,
+    since that's what's live today. Worth revisiting whether those should also unify
+    with jackets once real products land in them.
+
 ## Adding real product photos
 
 Every photo slot on every page is currently a dashed placeholder box (so it's obvious
